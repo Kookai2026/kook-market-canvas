@@ -12,7 +12,7 @@ export default function TaehaPortfolio() {
   // 포트폴리오 목록 상태
   const [holdings, setHoldings] = useState([
     { id: 1, name: 'HD현대일렉트릭', ticker: '267260', buyDate: '2026-04-15', avgPrice: 210000, quantity: 50 },
-    { name: 'NVIDIA Corp', ticker: 'NVDA', buyDate: '2026-05-10', avgPrice: 950, quantity: 20 }
+    { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', buyDate: '2026-05-10', avgPrice: 95, quantity: 20 }
   ]);
 
   // 신규 등록 폼 상태
