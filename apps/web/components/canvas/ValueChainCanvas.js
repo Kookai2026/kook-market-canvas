@@ -1,29 +1,29 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Network, HelpCircle, Layers, ZoomIn, ZoomOut, RotateCcw, ArrowUpRight } from 'lucide-react';
+import { Network, HelpCircle, Layers, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import InstrumentCard from '../cards/InstrumentCard';
 
-// 캔버스 내 노드 구조 데이터 (좌표값 포함)
+// 캔버스 내 노드 구조 데이터 (좌표값 포함 - 미국주식 한글 병기)
 const NODES_POOL = {
   center: {
     id: 'center',
-    name: '👑 xAI & Tesla (머스크 생태계)',
+    name: '👑 xAI & 테슬라 (Tesla)',
     x: 310, y: 220,
     w: 240, h: 70,
     description: '일론 머스크가 이끄는 AI 및 자율주행, 휴머노이드 로봇 생태계의 중앙 허브. 기가 텍사스 및 멤피스 슈퍼클러스터가 중심축.',
     instruments: [
-      { name: 'Tesla Corp', ticker: 'TSLA', sector: '전기차/AI', fit: 95, overheat: 68, price: '$178.4', change: '+3.2%', volumeSignal: '기관 순매집 전환', analysis: 'FSD V12 및 로보택시 공개 기대감. 에너지 및 로봇 부문 잠재 가치 상승 국면.' }
+      { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '전기차/AI', fit: 95, overheat: 68, price: '$178.4', change: '+3.2%', volumeSignal: '기관 순매집 전환', analysis: 'FSD V12 및 로보택시 공개 기대감. 에너지 및 로봇 부문 잠재 가치 상승 국면.' }
     ]
   },
   spacex: {
     id: 'spacex',
-    name: '📡 SpaceX & 스타링크',
+    name: '📡 스페이스X (SpaceX)',
     x: 330, y: 50,
     w: 200, h: 60,
     description: '글로벌 초고속 저지연 위성 전력/인터넷망 스타링크 구축. 우주 태양광 전력망 협력 가능성 대두.',
     instruments: [
-      { name: 'SpaceX (비상장)', ticker: 'SPACE.X', sector: '우주항공', fit: 80, overheat: 50, price: '비상장', change: '0.0%', volumeSignal: '사외 거래 활발', analysis: '글로벌 우주 인터넷 인프라 독점. 스타링크 흑자 기조 유지로 기업가치 급상승 중.' }
+      { name: '스페이스X (SpaceX 비상장)', ticker: 'SPACE.X', sector: '우주항공', fit: 80, overheat: 50, price: '비상장', change: '0.0%', volumeSignal: '사외 거래 활발', analysis: '글로벌 우주 인터넷 인프라 독점. 스타링크 흑자 기조 유지로 기업가치 급상승 중.' }
     ]
   },
   datacenter: {
@@ -33,17 +33,17 @@ const NODES_POOL = {
     w: 230, h: 60,
     description: '10만 개의 H100 가속기가 탑재되는 현존 최대 AI 슈퍼클러스터. 대규모 150MW 전력 그리드가 핵심 병목.',
     instruments: [
-      { name: 'Modine Manufacturing', ticker: 'MOD', sector: '데이터센터 랙', fit: 78, overheat: 69, price: '$112.5', change: '+3.1%', volumeSignal: '기관 유입세', analysis: '고성능 GPU 랙용 공랭/수랭 제어 시스템 수혜 지속.' }
+      { name: '모다인 매뉴팩처링 (Modine)', ticker: 'MOD', sector: '데이터센터 랙', fit: 78, overheat: 69, price: '$112.5', change: '+3.1%', volumeSignal: '기관 유입세', analysis: '고성능 GPU 랙용 공랭/수랭 제어 시스템 수혜 지속.' }
     ]
   },
   nuclear: {
     id: 'nuclear',
-    name: '⚛️ Constellation 원자력 발전',
+    name: '⚛️ 콘스텔레이션 원자력 (CEG)',
     x: 580, y: 100,
     w: 230, h: 60,
     description: '24시간 고가동 AI 칩셋 전용 탄소 무배출 전원 공급원. 소형 원자로(SMR) 및 대형 원전 PPA 장기 계약.',
     instruments: [
-      { name: 'Constellation Energy', ticker: 'CEG', sector: '원자력 발전', fit: 90, overheat: 82, price: '$220.5', change: '+4.8%', volumeSignal: '거래대금 상위', analysis: '스리마일섬 원전 PPA 계약으로 테크 자이언트들의 타깃 전력 공급사 낙점.' }
+      { name: '콘스텔레이션 에너지 (Constellation)', ticker: 'CEG', sector: '원자력 발전', fit: 90, overheat: 82, price: '$220.5', change: '+4.8%', volumeSignal: '거래대금 상위', analysis: '스리마일섬 원전 PPA 계약으로 테크 자이언트들의 타깃 전력 공급사 낙점.' }
     ]
   },
   transformer: {
@@ -59,12 +59,12 @@ const NODES_POOL = {
   },
   cooling: {
     id: 'cooling',
-    name: '❄️ Vertiv 액체 냉각 솔루션',
+    name: '❄️ 버티브 액체냉각 (Vertiv)',
     x: 590, y: 225,
     w: 230, h: 60,
     description: '엔비디아 블랙웰 GPU 아키텍처 공식 냉각 파트너사. AI 데이터센터의 폐열 및 냉각 관리 독점력.',
     instruments: [
-      { name: 'Vertiv Holdings', ticker: 'VRT', sector: '열관리 솔루션', fit: 88, overheat: 84, price: '$94.2', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '엔비디아 패키징 밀착 수혜. 데이터센터 전원 및 공조 부문 독점주.' }
+      { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', sector: '열관리 솔루션', fit: 88, overheat: 84, price: '$94.2', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '엔비디아 패키징 밀착 수혜. 데이터센터 전원 및 공조 부문 독점주.' }
     ]
   },
   hbm: {
@@ -83,7 +83,7 @@ const NODES_POOL = {
 export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
   const [selectedNode, setSelectedNode] = useState(NODES_POOL.center);
   
-  // 줌 및 드래그 상태 관리 (피드백 7번 반영)
+  // 줌 및 드래그 상태 관리
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -92,7 +92,6 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
 
   // 드래그 시작
   const handleMouseDown = (e) => {
-    // 버튼 클릭이나 노드 클릭 시 드래그 방지
     if (e.target.closest('.canvas-node-item') || e.target.closest('.zoom-controls')) return;
     setIsDragging(true);
     dragStart.current = { x: e.clientX - pan.x, y: e.clientY - pan.y };
@@ -112,7 +111,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
     setIsDragging(false);
   };
 
-  // 줌인/줌아웃 조작
+  // 줌 조작
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.15, 2.0));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.15, 0.5));
   const handleZoomReset = () => {
@@ -178,7 +177,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
             top: 'calc(50% - 260px)'
           }}
         >
-          {/* 엣지 연결선용 절대좌표 SVG 레이어 (배경) */}
+          {/* 엣지 연결선용 절대좌표 SVG 레이어 */}
           <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
             <defs>
               <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -186,17 +185,11 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
               </marker>
             </defs>
             {/* 센터에서 각 노드로 향하는 수송/계약 연동 엣지 */}
-            {/* SpaceX */}
             <path d="M 430 220 L 430 110" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrow)" />
-            {/* Datacenter */}
             <path d="M 310 240 L 220 160" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* Nuclear */}
             <path d="M 550 240 L 640 160" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* Transformer */}
             <path d="M 310 255 L 260 255" stroke="rgba(139, 92, 246, 0.5)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* Cooling */}
             <path d="M 550 255 L 590 255" stroke="rgba(139, 92, 246, 0.5)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* HBM */}
             <path d="M 430 290 L 430 400" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2.5" markerEnd="url(#arrow)" />
           </svg>
 

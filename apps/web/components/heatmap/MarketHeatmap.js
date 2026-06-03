@@ -15,18 +15,18 @@ const INITIAL_HEATMAP_DATA = [
   { name: '한미반도체', ticker: '042700', change: 6.8, sector: 'HBM 패키징', price: '148,200원', market: 'KR' },
   { name: '삼성전자', ticker: '005930', change: 0.8, sector: 'HBM 패키징', price: '72,400원', market: 'KR' },
 
-  // 2. 해외 주식 (US)
-  { name: 'NVIDIA Corp', ticker: 'NVDA', change: 4.1, sector: 'AI 가속기', price: '$1,150', market: 'US' },
-  { name: 'TSMC ADR', ticker: 'TSM', change: 2.5, sector: 'AI 가속기', price: '$152.4', market: 'US' },
-  { name: 'Vertiv Holdings', ticker: 'VRT', change: 6.2, sector: '열관리 솔루션', price: '$94.2', market: 'US' },
-  { name: 'Modine Mfg', ticker: 'MOD', change: 3.1, sector: '열관리 솔루션', price: '$112.5', market: 'US' },
-  { name: 'Eaton Corp plc', ticker: 'ETN', change: 1.8, sector: '배전/전력관리', price: '$312.4', market: 'US' },
-  { name: 'Schneider Elec', ticker: 'SU.PA', change: 0.9, sector: '배전/전력관리', price: '215.3€', market: 'US' },
-  { name: 'Constellation', ticker: 'CEG', change: 4.8, sector: '원자력/발전', price: '$220.5', market: 'US' },
-  { name: 'Vistra Corp', ticker: 'VST', change: 5.3, sector: '원자력/발전', price: '$88.4', market: 'US' },
-  { name: 'NextEra Energy', ticker: 'NEE', change: 0.5, sector: '유틸리티/그리드', price: '$72.4', market: 'US' },
-  { name: 'Duke Energy', ticker: 'DUK', change: -0.3, sector: '유틸리티/그리드', price: '$101.2', market: 'US' },
-  { name: 'Nippon Steel', ticker: '5401.T', change: -0.8, sector: '철강/GO소재', price: '3,250¥', market: 'US' }
+  // 2. 해외 주식 (US - 한글 병기 반영)
+  { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', change: 4.1, sector: 'AI 가속기', price: '$1,150', market: 'US' },
+  { name: '티에스엠씨 (TSMC)', ticker: 'TSM', change: 2.5, sector: 'AI 가속기', price: '$152.4', market: 'US' },
+  { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', change: 6.2, sector: '열관리 솔루션', price: '$94.2', market: 'US' },
+  { name: '모다인 매뉴팩처링 (Modine)', ticker: 'MOD', change: 3.1, sector: '열관리 솔루션', price: '$112.5', market: 'US' },
+  { name: '이튼 코퍼레이션 (Eaton)', ticker: 'ETN', change: 1.8, sector: '배전/전력관리', price: '$312.4', market: 'US' },
+  { name: '슈나이더 일렉트릭 (Schneider)', ticker: 'SU.PA', change: 0.9, sector: '배전/전력관리', price: '215.3€', market: 'US' },
+  { name: '콘스텔레이션 에너지 (CEG)', ticker: 'CEG', change: 4.8, sector: '원자력/발전', price: '$220.5', market: 'US' },
+  { name: '비스트라 에너지 (Vistra)', ticker: 'VST', change: 5.3, sector: '원자력/발전', price: '$88.4', market: 'US' },
+  { name: '넥스트에라 에너지 (NextEra)', ticker: 'NEE', change: 0.5, sector: '유틸리티/그리드', price: '$72.4', market: 'US' },
+  { name: '듀크 에너지 (Duke)', ticker: 'DUK', change: -0.3, sector: '유틸리티/그리드', price: '$101.2', market: 'US' },
+  { name: '일본제철 (Nippon Steel)', ticker: '5401.T', change: -0.8, sector: '철강/GO소재', price: '3,250¥', market: 'US' }
 ];
 
 export default function MarketHeatmap() {
@@ -34,7 +34,7 @@ export default function MarketHeatmap() {
   const [heatmapData, setHeatmapData] = useState(INITIAL_HEATMAP_DATA);
   const [lastUpdated, setLastUpdated] = useState('');
 
-  // 7초마다 실시간 시세 변동 시뮬레이션 적용 (피드백 6번 반영)
+  // 7초마다 실시간 시세 변동 시뮬레이션 적용
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -46,11 +46,9 @@ export default function MarketHeatmap() {
     const interval = setInterval(() => {
       setHeatmapData(prevData => 
         prevData.map(item => {
-          // 등락폭 미세 조정 (-0.3% ~ +0.3% 사이 무작위 변동)
           const fluctuation = parseFloat((Math.random() * 0.6 - 0.3).toFixed(2));
           const newChange = parseFloat((item.change + fluctuation).toFixed(2));
           
-          // 현재가 문자열 파싱 후 미세 변동 적용
           let newPrice = item.price;
           const numVal = parseFloat(item.price.replace(/[^\d.]/g, ''));
           if (!isNaN(numVal)) {
@@ -79,7 +77,6 @@ export default function MarketHeatmap() {
     return () => clearInterval(interval);
   }, []);
 
-  // 한국식 컬러 매핑 함수 (상승: 빨강, 하락: 파랑)
   const getCellColor = (changeVal) => {
     if (changeVal > 0) {
       const intensity = Math.min(Math.round((changeVal / 8) * 10) / 10, 1);
@@ -90,11 +87,8 @@ export default function MarketHeatmap() {
     }
   };
 
-  // 시장(KR/US) 및 밸류체인 카테고리별로 데이터 그룹화 처리 (피드백 6번 반영)
   const renderGroupedHeatmap = (marketCode, marketTitle) => {
     const marketItems = heatmapData.filter(item => item.market === marketCode);
-    
-    // 밸류체인별 그룹 키 추출
     const sectors = Array.from(new Set(marketItems.map(item => item.sector)));
 
     return (
