@@ -1,55 +1,151 @@
 'use client';
 
-import { useState } from 'react';
-import { Activity, RefreshCw } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Activity, RefreshCw, Layers } from 'lucide-react';
 
-const HEATMAP_DATA = [
-  { name: 'HD현대일렉트릭', ticker: '267260', change: +8.4, sector: '초고압 변압기', price: '284,500원' },
-  { name: '한미반도체', ticker: '042700', change: +6.8, sector: '반도체 장비', price: '148,200원' },
-  { name: 'Vertiv Holdings', ticker: 'VRT', change: +6.2, sector: '열관리 솔루션', price: '$94.2' },
-  { name: 'Vistra Corp', ticker: 'VST', change: +5.3, sector: '유틸리티 발전', price: '$88.4' },
-  { name: 'LS전선', ticker: '006260', change: +5.1, sector: '전선/케이블', price: '124,500원' },
-  { name: 'Constellation Energy', ticker: 'CEG', change: +4.8, sector: '원자력 발전', price: '$220.5' },
-  { name: 'NVIDIA Corp', ticker: 'NVDA', change: +4.1, sector: 'AI 가속기', price: '$1,150' },
-  { name: '풍산', ticker: '103140', change: +3.5, sector: '비철금속', price: '64,200원' },
-  { name: 'SK하이닉스', ticker: '000660', change: +3.2, sector: '반도체 메모리', price: '188,500원' },
-  { name: 'Modine Mfg', ticker: 'MOD', change: +3.1, sector: '산업용 냉각', price: '$112.5' },
-  { name: 'TSMC', ticker: 'TSM', change: +2.5, sector: '글로벌 파운드리', price: '$152.4' },
-  { name: 'LS일렉트릭', ticker: '010120', change: +2.1, sector: '전력기기', price: '198,200원' },
-  { name: 'Eaton Corp', ticker: 'ETN', change: +1.8, sector: '전력 관리', price: '$312.4' },
-  { name: '포스코홀딩스', ticker: '005490', change: +1.2, sector: '철강/소재', price: '385,000원' },
-  { name: '삼성전자', ticker: '005930', change: +0.8, sector: '반도체 종합', price: '72,400원' },
-  { name: 'NextEra Energy', ticker: 'NEE', change: +0.5, sector: '미국 유틸리티', price: '$72.4' },
-  { name: 'Duke Energy', ticker: 'DUK', change: -0.3, sector: '미국 유틸리티', price: '$101.2' },
-  { name: 'Nippon Steel', ticker: '5401.T', change: -0.8, sector: '글로벌 철강', price: '3,250¥' }
+const INITIAL_HEATMAP_DATA = [
+  // 1. 국내 주식 (KRX)
+  { name: 'HD현대일렉트릭', ticker: '267260', change: 8.4, sector: '초고압 변압기', price: '284,500원', market: 'KR' },
+  { name: '효성중공업', ticker: '298040', change: 4.2, sector: '초고압 변압기', price: '312,000원', market: 'KR' },
+  { name: 'LS일렉트릭', ticker: '010120', change: 2.1, sector: '초고압 변압기', price: '198,200원', market: 'KR' },
+  { name: 'LS전선', ticker: '006260', change: 5.1, sector: '구리/케이블', price: '124,500원', market: 'KR' },
+  { name: '풍산', ticker: '103140', change: 3.5, sector: '구리/케이블', price: '64,200원', market: 'KR' },
+  { name: '포스코홀딩스', ticker: '005490', change: 1.2, sector: '철강/GO소재', price: '385,000원', market: 'KR' },
+  { name: 'SK하이닉스', ticker: '000660', change: 3.2, sector: 'HBM 패키징', price: '188,500원', market: 'KR' },
+  { name: '한미반도체', ticker: '042700', change: 6.8, sector: 'HBM 패키징', price: '148,200원', market: 'KR' },
+  { name: '삼성전자', ticker: '005930', change: 0.8, sector: 'HBM 패키징', price: '72,400원', market: 'KR' },
+
+  // 2. 해외 주식 (US)
+  { name: 'NVIDIA Corp', ticker: 'NVDA', change: 4.1, sector: 'AI 가속기', price: '$1,150', market: 'US' },
+  { name: 'TSMC ADR', ticker: 'TSM', change: 2.5, sector: 'AI 가속기', price: '$152.4', market: 'US' },
+  { name: 'Vertiv Holdings', ticker: 'VRT', change: 6.2, sector: '열관리 솔루션', price: '$94.2', market: 'US' },
+  { name: 'Modine Mfg', ticker: 'MOD', change: 3.1, sector: '열관리 솔루션', price: '$112.5', market: 'US' },
+  { name: 'Eaton Corp plc', ticker: 'ETN', change: 1.8, sector: '배전/전력관리', price: '$312.4', market: 'US' },
+  { name: 'Schneider Elec', ticker: 'SU.PA', change: 0.9, sector: '배전/전력관리', price: '215.3€', market: 'US' },
+  { name: 'Constellation', ticker: 'CEG', change: 4.8, sector: '원자력/발전', price: '$220.5', market: 'US' },
+  { name: 'Vistra Corp', ticker: 'VST', change: 5.3, sector: '원자력/발전', price: '$88.4', market: 'US' },
+  { name: 'NextEra Energy', ticker: 'NEE', change: 0.5, sector: '유틸리티/그리드', price: '$72.4', market: 'US' },
+  { name: 'Duke Energy', ticker: 'DUK', change: -0.3, sector: '유틸리티/그리드', price: '$101.2', market: 'US' },
+  { name: 'Nippon Steel', ticker: '5401.T', change: -0.8, sector: '철강/GO소재', price: '3,250¥', market: 'US' }
 ];
 
 export default function MarketHeatmap() {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [marketFilter, setMarketFilter] = useState('ALL'); // ALL, KR, US
+  const [heatmapData, setHeatmapData] = useState(INITIAL_HEATMAP_DATA);
+  const [lastUpdated, setLastUpdated] = useState('');
 
-  const filteredData = HEATMAP_DATA.filter(item => {
-    const isUS = item.ticker.match(/^[A-Z]{2,4}$/); // Ticker 영어 대문자 2~4글자면 미국주식으로 간주
-    if (marketFilter === 'KR') return !isUS;
-    if (marketFilter === 'US') return isUS;
-    return true;
-  });
+  // 7초마다 실시간 시세 변동 시뮬레이션 적용 (피드백 6번 반영)
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setLastUpdated(now.toLocaleTimeString());
+    };
+    
+    updateTime();
+
+    const interval = setInterval(() => {
+      setHeatmapData(prevData => 
+        prevData.map(item => {
+          // 등락폭 미세 조정 (-0.3% ~ +0.3% 사이 무작위 변동)
+          const fluctuation = parseFloat((Math.random() * 0.6 - 0.3).toFixed(2));
+          const newChange = parseFloat((item.change + fluctuation).toFixed(2));
+          
+          // 현재가 문자열 파싱 후 미세 변동 적용
+          let newPrice = item.price;
+          const numVal = parseFloat(item.price.replace(/[^\d.]/g, ''));
+          if (!isNaN(numVal)) {
+            const isKR = item.price.includes('원');
+            const isUSD = item.price.startsWith('$');
+            const isEUR = item.price.includes('€');
+            const isYEN = item.price.includes('¥');
+
+            const priceFluc = numVal * (1 + fluctuation / 100);
+            if (isKR) newPrice = `${Math.round(priceFluc).toLocaleString()}원`;
+            else if (isUSD) newPrice = `$${priceFluc.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
+            else if (isEUR) newPrice = `${priceFluc.toFixed(1)}€`;
+            else if (isYEN) newPrice = `${Math.round(priceFluc).toLocaleString()}¥`;
+          }
+
+          return {
+            ...item,
+            change: newChange,
+            price: newPrice
+          };
+        })
+      );
+      updateTime();
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // 한국식 컬러 매핑 함수 (상승: 빨강, 하락: 파랑)
   const getCellColor = (changeVal) => {
     if (changeVal > 0) {
-      // 상승 폭에 따라 빨간색 농도 조절 (최대 +8% 기준)
       const intensity = Math.min(Math.round((changeVal / 8) * 10) / 10, 1);
-      return `rgba(239, 68, 68, ${0.15 + intensity * 0.75})`; // Red alpha
+      return `rgba(239, 68, 68, ${0.15 + intensity * 0.75})`;
     } else {
-      // 하락 폭에 따라 파란색 농도 조절
       const intensity = Math.min(Math.round((Math.abs(changeVal) / 2) * 10) / 10, 1);
-      return `rgba(59, 130, 246, ${0.15 + intensity * 0.75})`; // Blue alpha
+      return `rgba(59, 130, 246, ${0.15 + intensity * 0.75})`;
     }
   };
 
-  const handleCellClick = (item) => {
-    setSelectedItem(item);
+  // 시장(KR/US) 및 밸류체인 카테고리별로 데이터 그룹화 처리 (피드백 6번 반영)
+  const renderGroupedHeatmap = (marketCode, marketTitle) => {
+    const marketItems = heatmapData.filter(item => item.market === marketCode);
+    
+    // 밸류체인별 그룹 키 추출
+    const sectors = Array.from(new Set(marketItems.map(item => item.sector)));
+
+    return (
+      <div key={marketCode} style={{ marginBottom: '24px' }}>
+        <h3 style={{ fontSize: '15px', color: '#fff', borderLeft: '3px solid var(--accent)', paddingLeft: '8px', marginBottom: '16px', fontWeight: '700' }}>
+          {marketTitle}
+        </h3>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {sectors.map(sector => {
+            const sectorItems = marketItems.filter(item => item.sector === sector);
+            return (
+              <div key={sector} style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <h4 style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '4px', textTransform: 'uppercase', fontWeight: '700' }}>
+                  <Layers size={11} />
+                  {sector} 밸류체인
+                </h4>
+                
+                <div className="heatmap-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))' }}>
+                  {sectorItems.map((item, idx) => {
+                    const cellColor = getCellColor(item.change);
+                    const isSelected = selectedItem?.ticker === item.ticker;
+                    return (
+                      <div
+                        key={idx}
+                        className="heatmap-cell"
+                        style={{
+                          backgroundColor: cellColor,
+                          border: isSelected ? '2px solid #ffffff' : '1px solid rgba(255,255,255,0.04)',
+                          boxShadow: isSelected ? '0 0 15px rgba(255,255,255,0.3)' : 'none',
+                          minHeight: '75px'
+                        }}
+                        onClick={() => setSelectedItem(item)}
+                      >
+                        <div>
+                          <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.6)', fontFamily: 'monospace' }}>{item.ticker}</span>
+                          <div className="heatmap-name" style={{ fontSize: '12px', fontWeight: '600' }}>{item.name}</div>
+                        </div>
+                        <div className="heatmap-change" style={{ fontSize: '13px' }}>
+                          {item.change > 0 ? `+${item.change}%` : `${item.change}%`}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -58,57 +154,25 @@ export default function MarketHeatmap() {
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Activity size={20} className="text-accent" style={{ color: 'var(--accent-light)' }} />
-            <span>KMC 실시간 마켓 히트맵</span>
+            <span>KMC 실시간 마켓 히트맵 (그룹화)</span>
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            밸류체인 유니버스 핵심 종목들의 등락 현황 시각화 (한국식 빨강/파랑 테마)
+            국가별 대분류 및 내부 밸류체인 테마별 그룹 매핑 (7초 단위 시세 연동)
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <div className="canvas-selector">
-            {['ALL', 'KR', 'US'].map((market) => (
-              <button
-                key={market}
-                className={`canvas-sel-btn ${marketFilter === market ? 'active' : ''}`}
-                onClick={() => {
-                  setMarketFilter(market);
-                  setSelectedItem(null);
-                }}
-              >
-                {market === 'ALL' ? '전체' : market === 'KR' ? '국내 주식' : '미국 주식'}
-              </button>
-            ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.03)', padding: '6px 12px', borderRadius: '20px', border: '1px solid var(--border)' }}>
+            <RefreshCw size={12} className="text-accent" style={{ animation: 'spin 4s linear infinite', color: 'var(--accent-light)' }} />
+            <span>실시간 갱신: {lastUpdated}</span>
           </div>
         </div>
       </div>
 
-      {/* 히트맵 그리드 */}
-      <div className="heatmap-grid">
-        {filteredData.map((item, idx) => {
-          const cellColor = getCellColor(item.change);
-          const isSelected = selectedItem?.ticker === item.ticker;
-          return (
-            <div
-              key={idx}
-              className="heatmap-cell"
-              style={{
-                backgroundColor: cellColor,
-                border: isSelected ? '2px solid #ffffff' : '1px solid rgba(255,255,255,0.05)',
-                boxShadow: isSelected ? '0 0 15px rgba(255,255,255,0.3)' : 'none'
-              }}
-              onClick={() => handleCellClick(item)}
-            >
-              <div>
-                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.6)', fontFamily: 'monospace' }}>{item.ticker}</span>
-                <div className="heatmap-name">{item.name}</div>
-              </div>
-              <div className="heatmap-change">
-                {item.change > 0 ? `+${item.change}%` : `${item.change}%`}
-              </div>
-            </div>
-          );
-        })}
+      {/* 대분류(국내/해외) 및 중분류(밸류체인) 히트맵 렌더링 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        {renderGroupedHeatmap('KR', '🇰🇷 대한민국 코스피 / 코스닥')}
+        {renderGroupedHeatmap('US', '🇺🇸 미국 나스닥 / 뉴욕증시 (ADR 포함)')}
       </div>
 
       {/* 선택 셀 상세 정보 패널 */}
@@ -122,8 +186,8 @@ export default function MarketHeatmap() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <h4 style={{ fontSize: '15px', color: '#fff', fontWeight: '600' }}>
-              선택 종목 간편 시세
+            <h4 style={{ fontSize: '14px', color: '#fff', fontWeight: '600' }}>
+              선택 종목 퀵 리뷰
             </h4>
             <button 
               style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '12px' }}
@@ -132,16 +196,23 @@ export default function MarketHeatmap() {
               [ 닫기 × ]
             </button>
           </div>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'baseline', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '24px', alignItems: 'baseline', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '18px', fontWeight: '700', color: '#fff' }}>{selectedItem.name} ({selectedItem.ticker})</span>
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>섹터: {selectedItem.sector}</span>
-            <span style={{ fontSize: '20px', fontWeight: '700', color: '#fff' }}>현재가: {selectedItem.price}</span>
+            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>밸류체인: {selectedItem.sector}</span>
+            <span style={{ fontSize: '20px', fontWeight: '700', color: '#fff' }}>실시간가: {selectedItem.price}</span>
             <span style={{ fontSize: '16px', fontWeight: '700', color: selectedItem.change > 0 ? 'var(--danger)' : '#60a5fa' }}>
-              전일대비 {selectedItem.change > 0 ? `+${selectedItem.change}%` : `${selectedItem.change}%`}
+              변동률: {selectedItem.change > 0 ? `+${selectedItem.change}%` : `${selectedItem.change}%`}
             </span>
           </div>
         </div>
       )}
+
+      <style jsx global>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }

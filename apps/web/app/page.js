@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   FileText, Star, Activity, Sparkles, CheckCircle2, 
-  TrendingUp, Compass, User, ExternalLink, Network, Layers, ShieldCheck
+  TrendingUp, Compass, User, ExternalLink, Network, Layers, ShieldCheck, Home as HomeIcon
 } from 'lucide-react';
 
 import SignalFeed from '../components/news/SignalFeed';
@@ -11,12 +11,14 @@ import FavoriteList, { STOCKS_POOL } from '../components/favorites/FavoriteList'
 import ValueChainCanvas from '../components/canvas/ValueChainCanvas';
 import MuskStackTab from '../components/cards/MuskStackTab';
 import MarketHeatmap from '../components/heatmap/MarketHeatmap';
+import TaehaPortfolio from '../components/favorites/TaehaPortfolio';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('dashboard'); // dashboard, canvas, musk, heatmap
+  const [activeTab, setActiveTab] = useState('dashboard'); // dashboard, canvas, musk, heatmap, portfolio
   const [favorites, setFavorites] = useState(['267260', 'NVDA']); // 기본 즐겨찾기 종목
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [simulatedTime, setSimulatedTime] = useState('');
 
   // 로컬스토리지에서 즐겨찾기 복원
   useEffect(() => {
@@ -29,6 +31,17 @@ export default function Home() {
         console.error(e);
       }
     }
+  }, []);
+
+  // 10초 단위 대시보드 가상 시세 동기화 시각 업데이트
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      setSimulatedTime(now.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
+    };
+    update();
+    const interval = setInterval(update, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const toggleFavorite = (ticker) => {
@@ -48,7 +61,6 @@ export default function Home() {
     }
   };
 
-  // 마운트 전에는 서버사이드 렌더링 에러 방지용 스텁 렌더링
   if (!isMounted) {
     return (
       <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0a0b0d', color: '#fff' }}>
@@ -109,7 +121,7 @@ export default function Home() {
           onClick={() => setActiveTab('canvas')}
         >
           <Layers size={16} />
-          <span>밸류체인 캔버스 맵</span>
+          <span>밸류체인 마인드 맵</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'musk' ? 'active' : ''}`}
@@ -124,6 +136,14 @@ export default function Home() {
         >
           <TrendingUp size={16} />
           <span>마켓 히트맵</span>
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'portfolio' ? 'active' : ''}`}
+          onClick={() => setActiveTab('portfolio')}
+          style={{ borderLeft: '1px solid var(--border)', paddingLeft: '16px' }}
+        >
+          <HomeIcon size={16} style={{ color: 'var(--success)' }} />
+          <span style={{ color: '#fff', fontWeight: '600' }}>태하 하우스 투자</span>
         </button>
       </nav>
 
@@ -160,7 +180,7 @@ export default function Home() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>마지막 연산 배치 실행</span>
-                  <span style={{ fontFamily: 'monospace' }}>2026-06-03 23:30 KST</span>
+                  <span style={{ fontFamily: 'monospace' }}>{simulatedTime}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>클라우드 동기화 모드</span>
@@ -192,6 +212,10 @@ export default function Home() {
 
       {activeTab === 'heatmap' && (
         <MarketHeatmap />
+      )}
+
+      {activeTab === 'portfolio' && (
+        <TaehaPortfolio />
       )}
     </main>
   );
