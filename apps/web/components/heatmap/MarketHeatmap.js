@@ -14,11 +14,15 @@ const INITIAL_HEATMAP_DATA = [
   { name: 'SK하이닉스', ticker: '000660', change: 3.2, sector: 'HBM 패키징', price: '188,500원', market: 'KR' },
   { name: '한미반도체', ticker: '042700', change: 6.8, sector: 'HBM 패키징', price: '148,200원', market: 'KR' },
   { name: '삼성전자', ticker: '005930', change: 0.8, sector: 'HBM 패키징', price: '72,400원', market: 'KR' },
-  { name: 'SKC', ticker: '011790', sector: '유리 기판', change: 4.5, price: '138,500원', market: 'KR' },
-  { name: '삼성전기', ticker: '009150', sector: '유리 기판', change: 1.3, price: '152,000원', market: 'KR' },
+  { name: 'SKC', ticker: '011790', sector: '차세대 유리 기판', change: 4.5, price: '138,500원', market: 'KR' },
+  { name: '삼성전기', ticker: '009150', sector: '차세대 유리 기판', change: 1.3, price: '152,000원', market: 'KR' },
   { name: '서진시스템', ticker: '178320', sector: 'ESS & 스타링크', change: 5.3, price: '29,450원', market: 'KR' },
+  { name: '레인보우로보틱스', ticker: '277810', sector: '휴머노이드 로봇', change: 2.8, price: '168,500원', market: 'KR' },
+  { name: '에스비비테크', ticker: '389500', sector: '휴머노이드 로봇', change: 1.5, price: '28,200원', market: 'KR' },
 
   // 2. 해외 주식 (US)
+  { name: '바이코 (Vicor)', ticker: 'VICR', change: 3.5, sector: '48V 전력 아키텍처', price: '$42.8', market: 'US' },
+  { name: '온세미 (onsemi)', ticker: 'ON', change: 1.2, sector: '48V 전력 아키텍처', price: '$72.4', market: 'US' },
   { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', change: 4.1, sector: 'AI 가속기 GPU', price: '$120.5', market: 'US' },
   { name: '티에스엠씨 (TSMC)', ticker: 'TSM', change: 2.5, sector: 'AI 가속기 GPU', price: '$152.4', market: 'US' },
   { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', change: 6.2, sector: '열관리 솔루션', price: '$94.2', market: 'US' },
@@ -31,7 +35,8 @@ const INITIAL_HEATMAP_DATA = [
   { name: '넥스트에라 에너지 (NextEra)', ticker: 'NEE', change: 0.5, sector: '유틸리티/그리드', price: '$72.4', market: 'US' },
   { name: '듀크 에너지 (Duke)', ticker: 'DUK', change: -0.3, sector: '유틸리티/그리드', price: '$101.2', market: 'US' },
   { name: '일본제철 (Nippon Steel)', ticker: '5401.T', change: -0.8, sector: '철강/GO소재', price: '3,250¥', market: 'US' },
-  { name: '퀄컴 (Qualcomm)', ticker: 'QCOM', change: 2.2, sector: '온디바이스 AI', price: '$202.4', market: 'US' }
+  { name: '퀄컴 (Qualcomm)', ticker: 'QCOM', change: 2.2, sector: '온디바이스 AI', price: '$202.4', market: 'US' },
+  { name: '슈뢰딩거 (Schrodinger)', ticker: 'SDGR', change: 0.8, sector: 'Bio-AI & 합성생물학', price: '$22.5', market: 'US' }
 ];
 
 export default function MarketHeatmap() {

@@ -1,125 +1,136 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Network, HelpCircle, Layers, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import InstrumentCard from '../cards/InstrumentCard';
 
-// 10대 밸류체인 노드망 데이터 기획 (NVIDIA 가격 분할 후 $120.5 보정 완료)
+// 5년 텐버거 미래 먹거리 10대 핵심 섹터 노드망 기획 (48V 아키텍처, 휴머노이드 로봇, Bio-AI 완벽 매핑)
 const NODES_POOL = {
   center: {
     id: 'center',
     name: '👑 xAI & 테슬라 (Tesla Hub)',
     x: 370, y: 250,
     w: 260, h: 70,
-    description: '일론 머스크의 멤피스 AI 데이터센터와 테슬라 FSD/휴머노이드 생태계를 연결하는 중앙 전략 기지.',
+    description: '일론 머스크 생태계의 중앙 허브. 기가 텍사스, 멤피스 슈퍼클러스터, 옵티머스 휴머노이드 연계 핵심.',
     instruments: [
-      { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: 'ESS & 스타링크', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 매수 우위', analysis: '전기차 본업 외에 메가팩(Megapack) 및 자율주행 FSD 가치가 생태계 성장 견인.' }
+      { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: 'ESS & 스타링크', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 매수 우위', analysis: 'FSD 자율주행 및 에너지 메가팩 부문 성장이 하반기 주요 드라이버.' }
+    ]
+  },
+  arch48v: {
+    id: 'arch48v',
+    name: '🔌 1. 48V 전력 아키텍처',
+    x: 50, y: 250,
+    w: 220, h: 60,
+    description: '차량 전압 체계를 12V에서 48V로 늘려 구리 배선을 1/4로 단축하고 전력 효율을 혁신하는 E/E 아키텍처.',
+    instruments: [
+      { name: '바이코 (Vicor Corp)', ticker: 'VICR', sector: '48V 전력 아키텍처', fit: 88, overheat: 62, price: '$42.8', change: '+3.5%', volumeSignal: '기관 순매수 전환', analysis: '48V E/E 전력 모듈 독보적 점유율. 사이버트럭 및 차세대 양산차 변환 수혜.' },
+      { name: '온세미 (onsemi)', ticker: 'ON', sector: '48V 전력 아키텍처', fit: 85, overheat: 58, price: '$72.4', change: '+1.2%', volumeSignal: '외인 매수 우위', analysis: 'SiC 전력 반도체 및 지능형 전력 모듈 공급량 증대 기조.' }
     ]
   },
   hvt: {
     id: 'hvt',
-    name: '⚡ 1. 초고압 변압기 (HVT)',
-    x: 50, y: 250,
+    name: '⚡ 2. 초고압 변압기 (HVT)',
+    x: 50, y: 360,
     w: 220, h: 60,
-    description: '전력 전송 그리드 병목의 주역. 미국 유틸리티 수주 숏티지 장기 수혜.',
+    description: '전력 전송 그리드 병목의 주역. 북미 데이터센터 건설 및 노후 송전망 교체 수혜 최고조.',
     instruments: [
-      { name: 'HD현대일렉트릭', ticker: '267260', sector: '초고압 변압기', fit: 92, overheat: 88, price: '284,500원', change: '+8.4%', volumeSignal: '외인 집중 매수', analysis: '수주 잔고 최고치 경신. 고마진 장기 수주 위주 믹스 개선.' },
-      { name: '효성중공업', ticker: '298040', sector: '초고압 변압기', fit: 86, overheat: 76, price: '312,000원', change: '+4.2%', volumeSignal: '기관 매수세 유입', analysis: '미국 멤피스 공장 본격 가동에 따른 외형 급성장 단계.' }
+      { name: 'HD현대일렉트릭', ticker: '267260', sector: '초고압 변압기', fit: 92, overheat: 88, price: '284,500원', change: '+8.4%', volumeSignal: '외인 집중 매수', analysis: '영업마진율 20% 돌파 지속. 북미 수주 백로그 단가 상승 지속 수혜.' },
+      { name: '효성중공업', ticker: '298040', sector: '초고압 변압기', fit: 86, overheat: 76, price: '312,000원', change: '+4.2%', volumeSignal: '기관 매수세 유입', analysis: '미국 멤피스 공장 풀 가동 본격화로 매출 다변화 개시.' }
     ]
   },
-  grid: {
-    id: 'grid',
-    name: '🔌 2. 배전 & 전력 관리',
-    x: 50, y: 130,
+  ess: {
+    id: 'ess',
+    name: '🔋 3. 대용량 ESS 저장',
+    x: 50, y: 140,
     w: 220, h: 60,
-    description: '데이터센터 내부 전력 부하 분산 및 기기 보호 스위치기어 공급망.',
+    description: '데이터센터 가동율 유지 및 독립형 신재생 전력 백업용 대용량 배터리 저장 장치.',
     instruments: [
-      { name: '이튼 코퍼레이션 (Eaton)', ticker: 'ETN', sector: '배전 및 전력관리', fit: 84, overheat: 65, price: '$312.4', change: '+1.8%', volumeSignal: '안정적 기관 매집', analysis: '북미 배전 시장 점유율 1위. 안정적인 데이터센터 PPA 프로젝트 참여 증가.' },
-      { name: 'LS일렉트릭', ticker: '010120', sector: '배전 및 전력기기', fit: 82, overheat: 74, price: '198,200원', change: '+2.1%', volumeSignal: '개인 매수 우위', analysis: '초고압 설비 및 스마트 배전반 신규 공장 증설 모멘텀.' }
+      { name: '서진시스템', ticker: '178320', sector: 'ESS & 스타링크', fit: 84, overheat: 72, price: '29,450원', change: '+5.3%', volumeSignal: '외인 집중 순매수', analysis: '글로벌 유틸리티 ESS 고객사들향 조립/공급량 역대 최대치 추적.' }
     ]
   },
   nuclear: {
     id: 'nuclear',
-    name: '⚛️ 3. SMR & 원자력 발전',
+    name: '⚛️ 4. SMR & 원자력 발전',
     x: 730, y: 130,
     w: 220, h: 60,
-    description: '24시간 무중단 친환경 에너지를 요구하는 테크 거인들의 원천 전력망.',
+    description: '기후 규제를 극복하고 무중단 AI 전력을 안정적으로 조달하는 독립 원천 발전 그리드.',
     instruments: [
-      { name: '콘스텔레이션 에너지 (CEG)', ticker: 'CEG', sector: 'SMR & 원자력 발전', fit: 90, overheat: 82, price: '$220.5', change: '+4.8%', volumeSignal: '거래대금 상위', analysis: '마이크로소프트와의 스리마일섬 원전 전력 공급 PPA 계약 체결로 업종 리더 도약.' },
-      { name: '뉴스케일 파워 (NuScale)', ticker: 'SMR', sector: 'SMR & 원자력 발전', fit: 76, overheat: 65, price: '$10.4', change: '+1.5%', volumeSignal: '개인 관심 급증', analysis: '소형 모듈러 원자로(SMR) 설계 승인을 획득한 상징적 핵심주.' }
+      { name: '콘스텔레이션 에너지 (CEG)', ticker: 'CEG', sector: 'SMR & 원자력 발전', fit: 90, overheat: 82, price: '$220.5', change: '+4.8%', volumeSignal: '거래대금 상위', analysis: 'MS 전력 독점 공급 계약 체결 영향 유틸리티 대장주 도약.' },
+      { name: '뉴스케일 파워 (NuScale)', ticker: 'SMR', sector: 'SMR & 원자력 발전', fit: 76, overheat: 65, price: '$10.4', change: '+1.5%', volumeSignal: '개인 관심 급증', analysis: 'SMR(소형 원자로) 승인 기업 중 가장 빠른 프로젝트 실증 단계 돌입.' }
     ]
   },
   cooling: {
     id: 'cooling',
-    name: '❄️ 4. 액체 냉각 솔루션',
+    name: '❄️ 5. 액체 냉각 솔루션',
     x: 730, y: 250,
     w: 220, h: 60,
-    description: '고성능 GPU 발열 제어용 Direct Liquid Cooling 하드웨어 공급처.',
+    description: '고열을 방출하는 차세대 GPU 데이터센터 필수 지능형 수냉 냉각 공조기기.',
     instruments: [
       { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', sector: '액체 냉각 솔루션', fit: 88, overheat: 84, price: '$94.2', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '엔비디아 블랙웰 수냉 쿨링 시스템 독점 파트너사 지위 유지.' }
     ]
   },
   hbm: {
     id: 'hbm',
-    name: '💾 5. HBM 적층 패키징',
+    name: '💾 6. HBM 적층 패키징',
     x: 380, y: 480,
     w: 240, h: 60,
-    description: 'TSV 공정 및 TC 본더 접합 기술을 이용한 초고속 메모리 패키징망.',
+    description: '실리콘 관통전극(TSV)과 초정밀 접합 TC 본딩 기술 기반 초고속 메모리 가속기 연동망.',
     instruments: [
-      { name: 'SK하이닉스', ticker: '000660', sector: 'HBM 패키징', fit: 89, overheat: 72, price: '188,500원', change: '+3.2%', volumeSignal: '외인/기관 양매수', analysis: '엔비디아 블랙웰용 HBM3E 독보적 점유율 및 고마진 수율 유지.' },
-      { name: '한미반도체', ticker: '042700', sector: 'HBM 패키징', fit: 91, overheat: 78, price: '148,200원', change: '+6.8%', volumeSignal: '기관 순매수 전환', analysis: '하이닉스 및 마이크론향 듀얼 TC 본더의 고점수 마진 발생 지속.' }
+      { name: 'SK하이닉스', ticker: '000660', sector: 'HBM 패키징', fit: 89, overheat: 72, price: '188,500원', change: '+3.2%', volumeSignal: '외인/기관 양매수', analysis: '엔비디아 HBM3E 독보적 공급 지배력 및 12단 양산 수율 선두 유지.' },
+      { name: '한미반도체', ticker: '042700', sector: 'HBM 패키징', fit: 91, overheat: 78, price: '148,200원', change: '+6.8%', volumeSignal: '기관 순매수 전환', analysis: '듀얼 TC 본더 글로벌 압도적 점유율. 영업이익률 최고 수준 방어.' }
     ]
   },
   glass: {
     id: 'glass',
-    name: '🔬 6. 차세대 유리 기판',
-    x: 90, y: 410,
+    name: '🔬 7. 차세대 유리 기판',
+    x: 90, y: 470,
     w: 220, h: 60,
-    description: '실리콘 인터포저를 대체하여 대역폭과 전력 효율을 30% 높이는 신소재.',
+    description: '반도체 패키징 성능 한계를 극복하기 위해 유기 소재 대신 유리를 채택하는 혁신 공정.',
     instruments: [
-      { name: 'SKC', ticker: '011790', sector: '유리 기판', fit: 82, overheat: 69, price: '138,500원', change: '+4.5%', volumeSignal: '기관 매집세', analysis: '자회사 앱솔릭스의 조지아 공장 세계 최초 유리기판 양산 개시 임박.' },
-      { name: '삼성전기', ticker: '009150', sector: '유리 기판', fit: 76, overheat: 58, price: '152,000원', change: '+1.3%', volumeSignal: '외인 매수 유입', analysis: '파일럿 라인 가동 및 글로벌 AI 기판 수급 다변화 수혜.' }
+      { name: 'SKC', ticker: '011790', sector: '차세대 유리 기판', fit: 82, overheat: 69, price: '138,500원', change: '+4.5%', volumeSignal: '기관 매집세', analysis: '자회사 앱솔릭스의 미국 현지 공장 상업 생산 임박에 따른 시세 선제 유입.' },
+      { name: '삼성전기', ticker: '009150', sector: '차세대 유리 기판', fit: 76, overheat: 58, price: '152,000원', change: '+1.3%', volumeSignal: '외인 매수 유입', analysis: '2026년 유리 기판 조기 양산 로드맵 발표 및 AI 부품 비중 확대.' }
     ]
   },
-  ess: {
-    id: 'ess',
-    name: '🔋 7. 대용량 ESS 저장',
-    x: 180, y: 40,
+  robot: {
+    id: 'robot',
+    name: '🤖 8. 휴머노이드 로봇',
+    x: 170, y: 40,
     w: 200, h: 60,
-    description: '독립 전력망 및 데이터센터 비상 발전을 위한 메가팩 배터리 공급망.',
+    description: '공장 생산직 대체 및 3D 공간 물리 신경망 로봇의 관절용 액추에이터 감속기 공급망.',
     instruments: [
-      { name: '서진시스템', ticker: '178320', sector: 'ESS & 스타링크', fit: 84, overheat: 72, price: '29,450원', change: '+5.3%', volumeSignal: '외인 집중 순매수', analysis: '글로벌 주요 ESS 메이커향 케이스 및 배터리 조립 수주 집중.' }
+      { name: '레인보우로보틱스', ticker: '277810', sector: '휴머노이드 로봇', fit: 86, overheat: 64, price: '168,500원', change: '+2.8%', volumeSignal: '기관 순매수 전환', analysis: '삼성전자와의 긴밀한 지분 연계 및 차세대 협동/휴머노이드 공동 개발 모멘텀.' },
+      { name: '에스비비테크', ticker: '389500', sector: '휴머노이드 로봇', fit: 78, overheat: 58, price: '28,200원', change: '+1.5%', volumeSignal: '개인 매수 유입', analysis: '로봇 관절에 들어가는 핵심 감속기 국산화 라인 보유 소형 강소기업.' }
     ]
   },
   starlink: {
     id: 'starlink',
-    name: '📡 8. 위성 스타링크 통신',
+    name: '📡 9. 위성 스타링크 통신',
     x: 400, y: 40,
     w: 200, h: 60,
-    description: '사외 외딴 데이터센터와 우주 기지를 잇는 초고속 저지연 위성 그리드.',
+    description: '저궤도 인공위성 군집 통신을 통한 전지구 초고속 연결망 구축 및 군사용 활용.',
     instruments: [
-      { name: '스페이스X (SpaceX 비상장)', ticker: 'SPACE.X', sector: '우주항공', fit: 80, overheat: 50, price: '비상장', change: '0.0%', volumeSignal: '사외 거래 활발', analysis: '독점 우주 수송 기술 기반. 스타링크 가입자 고성장으로 자생적 성장 구조 확립.' }
+      { name: '스페이스X (SpaceX 비상장)', ticker: 'SPACE.X', sector: '우주항공', fit: 80, overheat: 50, price: '비상장', change: '0.0%', volumeSignal: '사외 거래 활발', analysis: '스타링크 초고속 인터넷 부문의 지속적 가입자 증가 및 현금 흐름 흑자화 기조.' }
     ]
   },
-  ondevice: {
-    id: 'ondevice',
-    name: '📱 9. 온디바이스 AI 칩셋',
+  bio: {
+    id: 'bio',
+    name: '🧪 10. Bio-AI & 합성생물학',
     x: 630, y: 40,
     w: 220, h: 60,
-    description: '서버를 거치지 않고 단말에서 직접 LLM을 실행하는 고성능 NPU 프로세서.',
+    description: '인공지능을 활용해 신약 단백질 구조를 설계하고 신물질을 분할 연산하는 바이오 테크.',
     instruments: [
-      { name: '퀄컴 (Qualcomm)', ticker: 'QCOM', sector: '온디바이스 AI', fit: 86, overheat: 68, price: '$202.4', change: '+2.2%', volumeSignal: '외인 매집', analysis: '스냅드래곤 X 엘리트 AP의 PC 시장 연착륙. 모바일에서 오토/PC로 포트폴리오 확장.' }
+      { name: '슈뢰딩거 (Schrodinger)', ticker: 'SDGR', sector: 'Bio-AI & 합성생물학', fit: 83, overheat: 54, price: '$22.5', change: '+0.8%', volumeSignal: '외인 매집', analysis: '화학/물리학 계산 AI 분자 도구 플랫폼 리더. 빅파마 공동 수주 파이프라인 가치 유효.' }
     ]
   },
   gpu: {
     id: 'gpu',
-    name: '🧠 10. AI 가속기 GPU',
+    name: '🧠 AI 가속기 GPU',
     x: 690, y: 410,
     w: 220, h: 60,
-    description: 'AI 딥러닝 연산의 표준 가속 반도체 및 실리콘 통합 솔루션.',
+    description: '대형 언어 모델 및 생성형 AI 학습/추론에 사용되는 엔비디아 블랙웰/호퍼 통합 칩셋.',
     instruments: [
-      { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: 'AI 가속기 GPU', fit: 95, overheat: 85, price: '$120.5', change: '+4.1%', volumeSignal: '역대급 거래대금', analysis: '액면분할 후 $120선 안착. 후공정 병목 제어로 강력한 마켓 독점 pricing power 발휘.' },
-      { name: '티에스엠씨 (TSMC)', ticker: 'TSM', sector: 'AI 가속기 GPU', fit: 92, overheat: 70, price: '$152.4', change: '+2.5%', volumeSignal: 'ADR 외인 매집', analysis: '최첨단 3나노 파운드리 및 CoWoS 후공정 수주 쏠림 심화.' }
+      { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: 'AI 가속기 GPU', fit: 95, overheat: 85, price: '$120.5', change: '+4.1%', volumeSignal: '역대급 거래대금', analysis: '분할 후 $120선 안착. 호퍼 및 차세대 블랙웰 칩셋 전 세계 90% 이상 점유.' },
+      { name: '티에스엠씨 (TSMC)', ticker: 'TSM', sector: 'AI 가속기 GPU', fit: 92, overheat: 70, price: '$152.4', change: '+2.5%', volumeSignal: 'ADR 외인 매집', analysis: 'CoWoS 후공정 패키징 병목 집중 투자. 단가 인상 주도권 쥐고 고수익성 확보.' }
     ]
   }
 };
@@ -166,10 +177,10 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Network size={20} className="text-accent" style={{ color: 'var(--accent-light)' }} />
-            <span>KMC 10대 핵심 밸류체인 마인드 맵</span>
+            <span>KMC 5년 텐버거 미래 먹거리 10대 핵심 캔버스</span>
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            중앙 xAI 생태계에서 사방으로 연계된 10대 밸류체인입니다. 드래그하여 움직이거나 마우스 휠로 줌(Zoom) 해보세요.
+            48V 아키텍처 및 휴머노이드 로봇 등 10대 유망 미래 동력이 테슬라/xAI 생태계와 긴밀히 엣지 선으로 연동되어 있습니다.
           </p>
         </div>
 
@@ -217,33 +228,35 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
             top: 'calc(50% - 280px)'
           }}
         >
-          {/* 절대좌표 SVG 레이어 - 10방향 엣지선 */}
+          {/* 절대좌표 SVG 레이어 */}
           <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
             <defs>
               <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 0 2 L 10 5 L 0 8 z" fill="rgba(139, 92, 246, 0.35)" />
               </marker>
             </defs>
-            {/* Center (500, 285)에서 10개 노드로 향하는 수송/연동 엣지 */}
-            {/* 1. HVT (50, 250) */}
-            <path d="M 370 285 L 280 280" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 2. Grid (50, 130) */}
-            <path d="M 370 270 L 280 190" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 3. Nuclear (730, 130) */}
+            {/* Center (500, 285)에서 뻗어 나가는 E/E 및 반도체 엣지 */}
+            {/* 1. 48V 전력 아키텍처 (50, 250) */}
+            <path d="M 370 285 L 280 280" stroke="rgba(139, 92, 246, 0.6)" strokeWidth="2.5" markerEnd="url(#arrow)" />
+            {/* 48V에서 -> 2. HVT (50, 360) 및 -> 3. ESS (50, 140) 전력망 연계선 */}
+            <path d="M 160 250 L 160 170" stroke="rgba(139, 92, 246, 0.35)" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <path d="M 160 310 L 160 350" stroke="rgba(139, 92, 246, 0.35)" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            
+            {/* 4. Nuclear (730, 130) */}
             <path d="M 630 270 L 720 190" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 4. Cooling (730, 250) */}
+            {/* 5. Cooling (730, 250) */}
             <path d="M 630 285 L 720 280" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 5. HBM (380, 480) */}
+            {/* 6. HBM (380, 480) */}
             <path d="M 500 320 L 500 470" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2.5" markerEnd="url(#arrow)" />
-            {/* 6. Glass (90, 410) */}
-            <path d="M 380 320 L 280 410" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 7. ESS (180, 40) */}
-            <path d="M 430 250 L 310 110" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 8. Starlink (400, 40) */}
+            {/* 7. Glass (90, 470) */}
+            <path d="M 380 320 L 220 460" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
+            {/* 8. Robot (170, 40) */}
+            <path d="M 370 260 L 250 110" stroke="rgba(139, 92, 246, 0.5)" strokeWidth="2.5" markerEnd="url(#arrow)" />
+            {/* 9. Starlink (400, 40) */}
             <path d="M 500 250 L 500 110" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 9. On-Device (630, 40) */}
+            {/* 10. Bio-AI (630, 40) */}
             <path d="M 570 250 L 680 110" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2" markerEnd="url(#arrow)" />
-            {/* 10. GPU (690, 410) */}
+            {/* 11. GPU (690, 410) */}
             <path d="M 610 320 L 710 410" stroke="rgba(139, 92, 246, 0.4)" strokeWidth="2.5" markerEnd="url(#arrow)" />
           </svg>
 
