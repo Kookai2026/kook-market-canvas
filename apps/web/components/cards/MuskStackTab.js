@@ -4,23 +4,23 @@ import { useState } from 'react';
 import { ShieldCheck, ExternalLink, Link2, HelpCircle, AlertTriangle, Calendar, Award } from 'lucide-react';
 import InstrumentCard from './InstrumentCard';
 
-// Musk Stack 관계 데이터 (확인일, 출처 종류 필수 보완)
+// Musk Stack 관계 데이터 (확인일, 출처 종류 필수 보완 및 Eaton 등급 C로 강등)
 const MUSK_STACK_DATA = [
   {
     id: 'eaton_tesla',
     subject: 'Eaton Corp ↔ Tesla Gigafactory Texas',
-    rank: 'A',
-    relationType: '기가팩토리 배전설비 공급',
-    summary: '테슬라 기가 텍사스 및 사이버트럭 생산 라인의 지능형 배전 스위치기어 및 스위치보드 직접 납품 확인.',
-    evidence: 'Tesla Giga Texas EPC 협력사 공급 내역서 및 보도자료',
+    rank: 'C',
+    relationType: '간접 배전 인프라 연동',
+    summary: '테슬라 기가 텍사스 및 사이버트럭 생산 라인의 전력 인프라 연동에 따른 수배전반 배전기기 수혜 가능성.',
+    evidence: '공식 공급 계약 문서 확인 전까지 간접 인프라 수혜군으로 검증 단계 분류',
     evidenceUrl: 'https://www.eaton.com',
-    sourceType: '협력사 공식 공급 명세서',
+    sourceType: '공식 문서 미확인 - 검증 진행 중',
     verifiedAt: '2026-06-04',
     instrument: {
       name: 'Eaton Corp plc',
       ticker: 'ETN',
       sector: '전력 관리 및 제어',
-      fit: 84,
+      fit: 80,
       overheat: 65,
       price: '$312.4',
       change: '+1.8%',
@@ -161,7 +161,7 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
               }}
             >
               {/* 왼쪽: 관계 및 증빙 */}
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', justifycontent: 'space-between', gap: '12px' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                     <span className={getRankBadgeClass(item.rank)}>
@@ -253,7 +253,7 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
 
       <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)', padding: '10px' }}>
         <HelpCircle size={14} />
-        <span>관계 증빙 정보는 사내 Hermes 수집기 및 SEC 공시, 멤피스 유틸리티 전력 승인 회의록 등을 기반으로 정기 실증되어 반영됩니다. D 및 X등급 루머 자산은 필터링되어 공개 표시에 포함되지 않습니다.</span>
+        <span>관계 증빙 정보는 공식 SEC 공시, 멤피스 유틸리티 전력 승인 회의록 등을 기반으로 정기 실증되어 반영됩니다. (향후 자동 수집 파이프라인 연동 검증 예정 소스). D 및 X등급 루머 자산은 필터링되어 공개 표시에 포함되지 않습니다.</span>
       </div>
     </div>
   );
