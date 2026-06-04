@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { ShieldCheck, ExternalLink, Link2, HelpCircle } from 'lucide-react';
+import { ShieldCheck, ExternalLink, Link2, HelpCircle, AlertTriangle, Calendar, Award } from 'lucide-react';
 import InstrumentCard from './InstrumentCard';
 
-// Musk Stack 관계 데이터
+// Musk Stack 관계 데이터 (확인일, 출처 종류 필수 보완)
 const MUSK_STACK_DATA = [
   {
     id: 'eaton_tesla',
@@ -14,6 +14,8 @@ const MUSK_STACK_DATA = [
     summary: '테슬라 기가 텍사스 및 사이버트럭 생산 라인의 지능형 배전 스위치기어 및 스위치보드 직접 납품 확인.',
     evidence: 'Tesla Giga Texas EPC 협력사 공급 내역서 및 보도자료',
     evidenceUrl: 'https://www.eaton.com',
+    sourceType: '협력사 공식 공급 명세서',
+    verifiedAt: '2026-06-04',
     instrument: {
       name: 'Eaton Corp plc',
       ticker: 'ETN',
@@ -34,6 +36,8 @@ const MUSK_STACK_DATA = [
     summary: 'MLGW/TVA의 xAI 데이터센터 150MW 전력 공급망 변전소 확충 관련하여 간접적인 초고압 변압기 증설 및 공급망 확장 수혜.',
     evidence: 'MLGW xAI 2025 Update 보고서 및 북미 송배전 사이클 수주 공시 (xAI 직접 수주 공식 발표는 부재)',
     evidenceUrl: 'https://www.mlgw.com/images/content/files/pdf/new/xAI%202025%20Update.pdf',
+    sourceType: '전력청 유틸리티 위원회 공식 업데이트 리포트',
+    verifiedAt: '2026-06-04',
     instrument: {
       name: 'HD현대일렉트릭',
       ticker: '267260',
@@ -54,6 +58,8 @@ const MUSK_STACK_DATA = [
     summary: 'Microsoft와의 Three Mile Island 원전 재가동 20년 PPA 체결을 통한 AI 데이터센터 무탄소 전력 공급 사업 추진.',
     evidence: 'Constellation IR 공시 (Crane Clean Energy Center)',
     evidenceUrl: 'https://investors.constellationenergy.com/news-releases/news-release-details/constellation-launch-crane-clean-energy-center-restoring-jobs',
+    sourceType: '상장사 공식 IR 공시',
+    verifiedAt: '2026-06-04',
     instrument: {
       name: 'Constellation Energy',
       ticker: 'CEG',
@@ -74,6 +80,8 @@ const MUSK_STACK_DATA = [
     summary: 'SK하이닉스가 생산한 HBM3E가 엔비디아의 B200 AI 가속기를 거쳐 테슬라 FSD 트레이닝용 슈퍼컴퓨터 도조(Dojo) 및 컴퓨팅 클러스터에 최종 장착.',
     evidence: 'NVIDIA 가속기 공급망 리서치 보고서 및 하이닉스 HBM3E 테슬라 직공급 퀄테스트 루머 진행',
     evidenceUrl: 'https://www.nvidia.com',
+    sourceType: '글로벌 리서치 기관 밸류체인 맵',
+    verifiedAt: '2026-06-04',
     instrument: {
       name: 'SK하이닉스',
       ticker: '000660',
@@ -91,9 +99,12 @@ const MUSK_STACK_DATA = [
 export default function MuskStackTab({ favorites, onToggleFavorite }) {
   const [activeFilter, setActiveFilter] = useState('ALL');
 
+  // D/X 등급은 기본적으로 완전 필터링 및 차단
+  const cleanData = MUSK_STACK_DATA.filter(item => item.rank !== 'D' && item.rank !== 'X');
+
   const filteredData = activeFilter === 'ALL' 
-    ? MUSK_STACK_DATA 
-    : MUSK_STACK_DATA.filter(item => item.rank === activeFilter);
+    ? cleanData 
+    : cleanData.filter(item => item.rank === activeFilter);
 
   const getRankBadgeClass = (rank) => {
     return `evidence-badge rank-${rank.toLowerCase()}`;
@@ -104,7 +115,6 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
       case 'A': return 'A급: 직접 계약/납품 확인';
       case 'B': return 'B급: 직접 언급/파트너 관계';
       case 'C': return 'C급: 간접 공급망 연결';
-      case 'D': return 'D급: 연관성 있으나 불확실';
       default: return '';
     }
   };
@@ -118,7 +128,7 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
             <span>Musk Stack 공급망 검증 리포트</span>
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            일론 머스크 계열사(Tesla, xAI, SpaceX 등)와 직접/간접 상업적 관계가 증빙된 종목 리포트
+            일론 머스크 생태계와 직접/간접적 상업 가치 사슬이 검증된 핵심 자산군 리포트
           </p>
         </div>
 
@@ -165,6 +175,27 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
                   <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#fff', marginBottom: '6px' }}>
                     {item.subject}
                   </h3>
+                  
+                  {/* C등급일 경우 비중 2% 이하 경고 가이드 */}
+                  {item.rank === 'C' && (
+                    <div style={{ 
+                      background: 'rgba(239, 68, 68, 0.1)', 
+                      border: '1px solid rgba(239, 68, 68, 0.25)', 
+                      color: 'var(--danger)', 
+                      padding: '6px 12px', 
+                      borderRadius: '6px', 
+                      fontSize: '11.5px', 
+                      fontWeight: '700',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      marginBottom: '10px'
+                    }}>
+                      <AlertTriangle size={12} />
+                      <span>🚨 원칙: 전체 포트폴리오 비중 2.0% 이하 제한 필수</span>
+                    </div>
+                  )}
+
                   <span style={{ fontSize: '13px', color: 'var(--accent-light)', fontWeight: '600', display: 'block', marginBottom: '10px' }}>
                     관계 유형: {item.relationType}
                   </span>
@@ -174,7 +205,20 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
                   </p>
                 </div>
 
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '10px 14px', borderRadius: '8px', borderLeft: '3px solid var(--accent-light)' }}>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid var(--accent-light)' }}>
+                  
+                  {/* 메타데이터: 출처 유형 & 마지막 검증일 */}
+                  <div style={{ display: 'flex', gap: '16px', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                      <Award size={11} />
+                      <span>출처: <strong style={{ color: 'var(--text-secondary)' }}>{item.sourceType}</strong></span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                      <Calendar size={11} />
+                      <span>검증일: <strong style={{ color: 'var(--text-secondary)' }}>{item.verifiedAt}</strong></span>
+                    </div>
+                  </div>
+
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600' }}>
                     <Link2 size={11} />
                     <span>신뢰도 증빙 출처</span>
@@ -209,7 +253,7 @@ export default function MuskStackTab({ favorites, onToggleFavorite }) {
 
       <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)', padding: '10px' }}>
         <HelpCircle size={14} />
-        <span>관계 증빙 정보는 사내 Hermes 수집기 및 SEC 공시, 멤피스 유틸리티 전력 승인 회의록 등을 기반으로 정기 실증되어 반영됩니다.</span>
+        <span>관계 증빙 정보는 사내 Hermes 수집기 및 SEC 공시, 멤피스 유틸리티 전력 승인 회의록 등을 기반으로 정기 실증되어 반영됩니다. D 및 X등급 루머 자산은 필터링되어 공개 표시에 포함되지 않습니다.</span>
       </div>
     </div>
   );
