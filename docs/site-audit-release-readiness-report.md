@@ -458,6 +458,8 @@ Musk Entities
 ```text
 넓은 12개 테마 데모
     ↓
+5년 장기투자 원칙 페이지
+    ↓
 깊은 3개 팩트 기반 캔버스
     ↓
 검증등급이 붙은 관계 그래프
@@ -469,12 +471,527 @@ Musk Entities
 
 1차 출시명도 `KMC Beta`가 아니라 **`KMC Research Preview`** 정도가 적절하다. 실제 데이터 API, 검증 워크플로, 버전관리, 보안 분리가 끝나기 전에는 정식 출시로 부르면 안 된다.
 
-## 11. 참고 소스
+추가로, KMC는 우리 부부와 지인이 매일 들어올 장기투자 사이트이므로 첫 화면의 기준을 바꿔야 한다. 첫 화면은 뉴스 피드가 아니라 **5년 투자 원칙 페이지**여야 한다. 기준 배분은 `Musk Stack 20% + Core 섹터 80%`로 두고, 매일 “무엇을 살까”보다 “원래 정한 원칙에서 벗어났는가”를 먼저 보여줘야 한다.
+
+## 11. 섹터 선정 기준
+
+KMC의 섹터는 “요즘 뜨는 테마”가 아니라 **검증 가능한 산업 병목과 투자 가능한 상장 종목이 연결되는 구조**여야 한다. 따라서 섹터 선정 기준은 아래처럼 정량/정성 혼합으로 둔다.
+
+### 11.1 섹터 선정 스코어
+
+```text
+SectorPriority =
+  0.25 * StructuralDemand
++ 0.20 * BottleneckStrength
++ 0.15 * InvestableUniverse
++ 0.15 * EvidenceAvailability
++ 0.10 * DataAvailability
++ 0.10 * UpdateVelocity
++ 0.05 * Differentiation
+```
+
+| 기준 | 의미 | 통과 기준 |
+|---|---|---|
+| StructuralDemand | 3~10년 수요가 구조적으로 증가하는가 | AI, 전력, 국방, 인구구조, 정책, CAPEX 중 2개 이상 연결 |
+| BottleneckStrength | 공급 병목이 가격/마진/수주로 전이되는가 | 리드타임, CAPEX, 인증, 기술장벽, 원재료 중 명확한 병목 |
+| InvestableUniverse | 투자 가능한 종목/ETF가 충분한가 | 한국/미국/일본/유럽 합산 10개 이상 후보 |
+| EvidenceAvailability | 1차 자료로 검증 가능한가 | 공시, IR, 정부/기관 보고서, 계약/수주 문서 |
+| DataAvailability | 카드화 가능한 데이터가 있는가 | 시세, 수급, 실적, 컨센서스, 공시, 뉴스 |
+| UpdateVelocity | 자주 바뀌어 재방문 가치가 있는가 | 월 1회 이상 유의미한 뉴스/공시/수주/정책 변화 |
+| Differentiation | 일반 테마주 서비스와 다른가 | 관계 그래프, 공급망, 증빙등급으로 차별화 가능 |
+
+### 11.2 출시용 섹터 분류
+
+| 등급 | 의미 | 운영 방식 |
+|---|---|---|
+| Core | 1차 출시 핵심 섹터 | 깊은 캔버스, 카드, 알림, 증빙 필수 |
+| Expansion | 2차 확장 섹터 | 기본 캔버스 + 일부 카드 |
+| Watchlist | 관찰 섹터 | 뉴스/메모 수준, 투자 판단 카드 제한 |
+| Excluded | 제외 | 직접 투자 가능성 낮거나 근거 부족 |
+
+## 12. 딥 리서치 기반 유망 섹터 우선순위
+
+현재 공개 자료와 시장 구조를 기준으로 보면, KMC가 1차 출시에서 깊게 다뤄야 할 섹터는 아래 순서다.
+
+| 우선순위 | 섹터 | 등급 | 선정 이유 | 현재 사이트 상태 |
+|---:|---|---|---|---|
+| 1 | AI 전력 인프라 / Grid Bottleneck | Core | IEA가 데이터센터 전력 수요와 그리드 병목을 구조 이슈로 제시. 변압기/스위치기어/배전/전력관리까지 투자 가능 종목 풍부 | 너무 단순함 |
+| 2 | AI 반도체 / HBM / Advanced Packaging | Core | AI 서버 CAPEX, HBM, CoWoS, 2.5D/3D 패키징 병목이 명확. 국내 종목 연결성 강함 | 3단계로 과소화 |
+| 3 | AI 데이터센터 전력/냉각 인프라 | Core | 고밀도 AI 랙, 액체냉각, CDU, UPS, PDU, 모듈형 데이터센터 수요 확대 | 냉각 섹터가 부품 수준 |
+| 4 | BESS / 전력 유연성 / ESS | Core 또는 Expansion | IEA가 배터리 저장을 가장 빠르게 성장하는 전력 기술로 언급. 데이터센터와 계통 접속 병목 완화에 중요 | ESS가 테슬라 중심으로 치우침 |
+| 5 | Physical AI / 로봇 자동화 | Expansion | IFR 기준 산업용 로봇 설치량은 장기 성장. 휴머노이드는 관심 높지만 상용 검증 부족 | 테마성 강함 |
+| 6 | 원전 PPA / SMR / 무탄소 전력 | Expansion | Constellation-Microsoft PPA처럼 AI 전력 조달과 직접 연결. 단 SMR 상용화는 시간 필요 | SMR과 기존 원전 운영 구분 부족 |
+| 7 | 우주/위성통신 | Watchlist | Starlink/방산/저궤도 통신은 구조 성장이나 상장 종목 직접성이 제한적 | Musk 테마와 혼재 |
+| 8 | Bio-AI | Watchlist | AI 신약/분자설계는 장기 유망하나 투자 가능한 밸류체인 검증이 어렵고 매출 가시성 낮음 | 삼성전자 등 연결이 부정확 |
+| 9 | 양자 컴퓨팅 | Watchlist | 장기 기술 옵션. 2026년 출시용 투자 판단 카드로는 변동성/상용성 리스크 큼 | 테마주 수준 |
+
+### 12.1 왜 12개 얕은 섹터보다 4개 깊은 섹터인가
+
+KMC의 차별점은 “많은 테마”가 아니라 “관계가 검증된 산업 그래프”다. 현재처럼 12개 섹터를 각각 3개 노드로 보여주면 사용자는 정보를 얻는 것이 아니라 테마명을 훑게 된다. 출시 전에는 아래 4개 섹터를 깊게 만드는 것이 맞다.
+
+1. AI 전력 인프라
+2. AI 반도체/HBM/Advanced Packaging
+3. 데이터센터 냉각/전력 설비
+4. BESS/전력 유연성
+
+Musk Stack은 별도 섹터가 아니라 **관계 검증 오버레이**로 둔다. 즉 `Musk Stack`이라는 탭은 유지하되, 그 안의 관계는 위 섹터 그래프 위에 겹쳐지는 검증 레이어여야 한다.
+
+## 13. 출시용 밸류체인 리스트
+
+아래 리스트는 1차 출시에서 실제로 구축해야 할 최소 노드 기준이다. 각 노드에는 `관련 종목`, `관계 유형`, `증빙`, `검증등급`, `리스크`가 붙어야 한다.
+
+### 13.1 AI 전력 인프라 / Grid Bottleneck
+
+핵심 투자 명제:
+
+- AI 데이터센터는 전력 수요를 구조적으로 증가시킨다.
+- 병목은 발전량 자체보다 **계통 접속, 변압기, 스위치기어, 케이블, 전력관리**에서 먼저 나타난다.
+- IEA는 2030년까지 그리드 투자가 현재 약 4,000억 달러 수준에서 약 50% 증가해야 한다고 제시한다.
+
+밸류체인:
+
+```text
+AI 전력 수요
+├─ Hyperscaler / AI 데이터센터
+│  ├─ Microsoft
+│  ├─ Amazon AWS
+│  ├─ Google
+│  ├─ Meta
+│  ├─ Oracle
+│  └─ xAI
+├─ 전력 조달
+│  ├─ 원전 PPA
+│  ├─ 가스발전
+│  ├─ 태양광/풍력 PPA
+│  ├─ ESS 결합 PPA
+│  └─ 현장 발전 / behind-the-meter
+├─ 송전망
+│  ├─ 초고압 변압기
+│  ├─ 전력용 차단기
+│  ├─ GIS/AIS 스위치기어
+│  ├─ 보호계전
+│  ├─ HVDC
+│  └─ 송전 케이블
+├─ 변전/배전
+│  ├─ 배전 변압기
+│  ├─ 배전반
+│  ├─ busway / busduct
+│  ├─ PDU
+│  ├─ UPS
+│  └─ 전력관리 소프트웨어
+├─ 핵심 소재
+│  ├─ 방향성 전기강판
+│  ├─ 구리
+│  ├─ 절연유
+│  ├─ 절연지
+│  └─ 전력반도체
+└─ 계통 최적화
+   ├─ dynamic line rating
+   ├─ dynamic transformer rating
+   ├─ advanced power flow control
+   ├─ topology optimization
+   └─ storage as transmission asset
+```
+
+후보 종목:
+
+| 세부 노드 | 한국 | 미국/글로벌 | 검증 포인트 |
+|---|---|---|---|
+| 초고압 변압기 | HD현대일렉트릭, 효성중공업 | Siemens Energy, GE Vernova, Hitachi Energy 비상장/ABB | 수주잔고, 북미 매출, 공장 증설 |
+| 배전/스위치기어 | LS ELECTRIC | Eaton, Schneider Electric | 데이터센터향 제품군, backlog |
+| 케이블/구리 | LS전선 관련주, 대한전선, 풍산 | Prysmian, Southwire 비상장 | HVDC/해저/초고압 케이블 수주 |
+| 방향성 전기강판 | POSCO홀딩스 | Nippon Steel, Cleveland-Cliffs | GOES 생산능력, 가격 전가 |
+| 전력관리 소프트웨어 | LS ELECTRIC | Eaton, Schneider, Siemens | 데이터센터 에너지관리 솔루션 |
+
+출시 전 수정:
+
+- `xAI 직접 수주`처럼 증빙 없는 직접 계약 표현 금지.
+- `AI 전력망 증설 수혜`, `북미 전력 장비 공급망`, `Memphis/미국 현지 생산 거점`처럼 검증 가능한 표현으로 낮춘다.
+
+### 13.2 AI 반도체 / HBM / Advanced Packaging
+
+핵심 투자 명제:
+
+- AI 모델 성능 경쟁은 GPU 단품이 아니라 `GPU + HBM + advanced packaging + networking + power/cooling` 시스템 경쟁이다.
+- SEMI는 2026~2027년 300mm fab equipment spending의 두 자릿수 성장을 전망했고, AI와 HBM 수요를 주요 동인으로 제시했다.
+- HBM과 CoWoS/2.5D/3D 패키징은 AI 서버 공급량을 제한하는 병목으로 작동한다.
+
+밸류체인:
+
+```text
+AI 반도체 시스템
+├─ AI accelerator
+│  ├─ GPU
+│  ├─ TPU / custom ASIC
+│  ├─ NPU
+│  └─ inference accelerator
+├─ HBM
+│  ├─ DRAM wafer
+│  ├─ TSV
+│  ├─ HBM stack
+│  ├─ HBM3E
+│  └─ HBM4
+├─ Advanced Packaging
+│  ├─ CoWoS
+│  ├─ SoIC
+│  ├─ EMIB
+│  ├─ Foveros
+│  ├─ fan-out
+│  └─ chiplet interconnect
+├─ 후공정 장비
+│  ├─ TC bonder
+│  ├─ hybrid bonding
+│  ├─ inspection/metrology
+│  ├─ dicing
+│  ├─ test handler
+│  └─ burn-in
+├─ 기판/소재
+│  ├─ ABF substrate
+│  ├─ silicon interposer
+│  ├─ glass core substrate
+│  ├─ underfill
+│  ├─ photoresist
+│  └─ copper plating
+├─ Foundry / OSAT
+│  ├─ TSMC
+│  ├─ Samsung Foundry
+│  ├─ Intel Foundry
+│  ├─ ASE
+│  └─ Amkor
+└─ System integration
+   ├─ NVIDIA HGX/NVL
+   ├─ server OEM/ODM
+   ├─ high-speed networking
+   └─ liquid-cooled rack
+```
+
+후보 종목:
+
+| 세부 노드 | 한국 | 미국/글로벌 | 검증 포인트 |
+|---|---|---|---|
+| HBM 제조 | SK하이닉스, 삼성전자 | Micron | HBM 매출 비중, 고객 인증, CAPEX |
+| TC 본더/후공정 | 한미반도체 | ASMPT, Besi | HBM 장비 수주, 고객사 다변화 |
+| 파운드리/패키징 | 삼성전자 | TSMC, Intel, Amkor, ASE | CoWoS/SoIC/EMIB capacity |
+| 기판 | 삼성전기, SKC | Ibiden, Shinko, Unimicron | ABF/유리기판 양산성 |
+| AI accelerator | - | NVIDIA, AMD, Broadcom, Marvell | GPU/ASIC 수주, 네트워킹 attach |
+
+출시 전 수정:
+
+- `NVIDIA-TSMC-CoWoS-HBM`을 하나의 선으로 뭉개지 말고, 병목별 노드를 분리한다.
+- 삼성전자는 HBM, Foundry, Advanced Package, 기판/MLCC와 Bio-AI를 혼동하지 않는다.
+
+### 13.3 AI 데이터센터 전력/냉각 인프라
+
+핵심 투자 명제:
+
+- AI 랙 밀도 상승은 공랭 중심 데이터센터 설계를 액체냉각/전력 통합 설계로 바꾸고 있다.
+- Schneider Electric은 2026년 AI 데이터센터에서 240kW/rack, 2028년 1MW/rack 가능성을 언급한다.
+- Uptime Institute는 AI 데이터센터와 일반 엔터프라이즈 데이터센터 설계가 더 갈라질 것으로 본다.
+
+밸류체인:
+
+```text
+AI 데이터센터 인프라
+├─ Site / interconnection
+│  ├─ 전력 접속
+│  ├─ 변전소
+│  ├─ 물 사용권
+│  ├─ 부지/허가
+│  └─ 광통신 백본
+├─ Power train
+│  ├─ transformer
+│  ├─ switchgear
+│  ├─ UPS
+│  ├─ PDU
+│  ├─ busway
+│  └─ power monitoring
+├─ Cooling
+│  ├─ direct-to-chip cold plate
+│  ├─ CDU
+│  ├─ rear-door heat exchanger
+│  ├─ immersion cooling
+│  ├─ dielectric fluid
+│  ├─ pump/valve/sensor
+│  └─ leak detection
+├─ Rack / server integration
+│  ├─ liquid-cooled rack
+│  ├─ GPU tray
+│  ├─ NVLink / InfiniBand / Ethernet
+│  ├─ optical transceiver
+│  └─ cable management
+├─ Modular build
+│  ├─ prefabricated module
+│  ├─ containerized power/cooling
+│  ├─ brownfield retrofit
+│  └─ commissioning
+└─ Operation
+   ├─ DCIM
+   ├─ digital twin
+   ├─ predictive maintenance
+   ├─ PUE/WUE/CUE
+   └─ demand response
+```
+
+후보 종목:
+
+| 세부 노드 | 한국 | 미국/글로벌 | 검증 포인트 |
+|---|---|---|---|
+| 데이터센터 전력 | LS ELECTRIC, 효성중공업, HD현대일렉트릭 | Eaton, Schneider, Vertiv | AI DC향 수주/제품군 |
+| 냉각 | - | Vertiv, Schneider/Motivair, Supermicro, Modine, nVent | liquid cooling 매출/수주 |
+| 서버/랙 | 삼성전자 일부 부품 | Dell, Supermicro, HPE, Lenovo | NVIDIA rack partnership |
+| 네트워킹 | - | NVIDIA, Broadcom, Arista, Marvell, Coherent | optical/networking 성장 |
+| 모듈형 DC | - | Vertiv, Schneider, Eaton | prefabricated DC 수주 |
+
+출시 전 수정:
+
+- 냉각 섹터를 `액체 냉각 솔루션` 하나로 끝내지 말고, 전력/냉각/랙/운영을 통합 캔버스로 만든다.
+- 데이터센터 인프라는 전력 인프라와 겹치므로 엣지 중복을 허용하되 관계 유형을 다르게 표기한다.
+
+### 13.4 BESS / 전력 유연성 / ESS
+
+핵심 투자 명제:
+
+- IEA는 배터리 저장을 현재 가장 빠르게 성장하는 전력 기술로 설명한다.
+- 데이터센터와 재생에너지 확대는 BESS, 수요반응, grid flexibility 수요를 키운다.
+- AI 데이터센터는 계통 접속이 늦어질 때 BESS와 현장 전원을 결합할 유인이 있다.
+
+밸류체인:
+
+```text
+BESS / 전력 유연성
+├─ Battery cell
+│  ├─ LFP
+│  ├─ NMC
+│  ├─ sodium-ion watchlist
+│  └─ recycling
+├─ Module / pack
+│  ├─ module assembly
+│  ├─ thermal management
+│  ├─ safety enclosure
+│  └─ fire suppression
+├─ PCS / inverter
+│  ├─ power conversion system
+│  ├─ grid-forming inverter
+│  ├─ transformer
+│  └─ switchgear
+├─ EMS / software
+│  ├─ energy management system
+│  ├─ trading/dispatch
+│  ├─ demand response
+│  └─ battery analytics
+├─ Project developer / IPP
+│  ├─ utility-scale storage
+│  ├─ solar+BESS
+│  ├─ behind-the-meter
+│  └─ data-center co-location
+└─ Grid services
+   ├─ peak shaving
+   ├─ frequency response
+   ├─ congestion relief
+   ├─ backup power
+   └─ storage as transmission asset
+```
+
+후보 종목:
+
+| 세부 노드 | 한국 | 미국/글로벌 | 검증 포인트 |
+|---|---|---|---|
+| 배터리 셀 | LG에너지솔루션, 삼성SDI, SK온 비상장 | CATL, BYD, Tesla | ESS 매출/화재 리스크 |
+| PCS/인버터 | LS ELECTRIC | Tesla, Fluence, Enphase, SMA | grid-scale 수주 |
+| 시스템 통합 | 서진시스템 등 | Fluence, Tesla Energy, Wärtsilä | 프로젝트 레퍼런스 |
+| IPP/운영 | - | NextEra, Vistra, AES | BESS 보유량/개발 파이프라인 |
+
+출시 전 수정:
+
+- 현재 ESS 캔버스는 Tesla/Starlink 테마와 섞여 있다. `ESS 자체 밸류체인`과 `Tesla Megapack 관계`를 분리해야 한다.
+
+### 13.5 Physical AI / 로봇 자동화
+
+핵심 투자 명제:
+
+- IFR 기준 2024년 산업용 로봇 설치량은 역사상 두 번째로 높은 수준이고, 2025년 설치량 성장도 전망됐다.
+- 다만 휴머노이드는 기대가 크지만 2026년 기준 대량 상용화 근거가 약하다.
+- KMC는 휴머노이드 테마보다 **산업 자동화, 감속기, 액추에이터, AMR, 비전, 제어 소프트웨어**를 먼저 잡아야 한다.
+
+밸류체인:
+
+```text
+Physical AI / Robotics
+├─ Actuation
+│  ├─ servo motor
+│  ├─ harmonic reducer
+│  ├─ cycloidal reducer
+│  ├─ linear actuator
+│  └─ torque sensor
+├─ Perception
+│  ├─ camera
+│  ├─ LiDAR
+│  ├─ force/tactile sensor
+│  ├─ edge AI module
+│  └─ machine vision
+├─ Robot platform
+│  ├─ industrial robot
+│  ├─ collaborative robot
+│  ├─ AMR/AGV
+│  ├─ warehouse picking
+│  └─ humanoid watchlist
+├─ Control / AI
+│  ├─ motion control
+│  ├─ simulation
+│  ├─ digital twin
+│  ├─ reinforcement learning
+│  └─ fleet orchestration
+├─ Integration
+│  ├─ smart factory
+│  ├─ logistics automation
+│  ├─ semiconductor factory
+│  ├─ automotive factory
+│  └─ defense/inspection
+└─ Safety / certification
+   ├─ functional safety
+   ├─ collaborative safety
+   ├─ ISO 10218
+   └─ cybersecurity
+```
+
+후보 종목:
+
+| 세부 노드 | 한국 | 미국/글로벌 | 검증 포인트 |
+|---|---|---|---|
+| 감속기/부품 | 에스비비테크, 로보티즈 | Harmonic Drive, Nabtesco | 실제 납품처/매출 |
+| 협동로봇 | 두산로보틱스, 레인보우로보틱스 | Teradyne/UR, Fanuc, ABB, Yaskawa | 출하량/고객 |
+| 비전/센서 | - | Keyence, Cognex, Mobileye | 공장/물류 적용 |
+| AMR/물류 | - | Zebra, Symbotic, AutoStore | 물류 자동화 수주 |
+| AI compute/sim | - | NVIDIA, Siemens, Dassault | Isaac/디지털트윈 생태계 |
+
+출시 전 수정:
+
+- Tesla Optimus 직접 수혜주처럼 보이는 구조를 줄이고, 산업 자동화의 실제 매출 노드 중심으로 재작성한다.
+
+## 14. 관찰군 섹터 처리 원칙
+
+### 14.1 원전 PPA / SMR
+
+원전은 AI 전력 조달과 직접 연결되므로 중요하다. 다만 `기존 원전 운영/PPA`와 `SMR 개발`은 시간축이 완전히 다르다.
+
+| 구분 | 출시 처리 |
+|---|---|
+| 기존 원전 운영/PPA | Expansion 가능. Constellation-Microsoft처럼 공식 PPA가 있으면 관계카드 가능 |
+| SMR 개발사 | Watchlist. 설계 승인/실증/상업운전 지연 리스크 표시 필수 |
+| 원전 기자재 | 한국 종목 연결 가능하나 수출 프로젝트별 증빙 필요 |
+
+### 14.2 우주/위성통신
+
+상장 투자 가능성이 제한적이고 SpaceX/Starlink가 비상장 중심이다. 인텔리안테크, 위성 단말, 방산 통신 정도는 가능하지만 `Musk 직접 수혜`로 과장하면 안 된다.
+
+### 14.3 Bio-AI
+
+Schrodinger, NVIDIA BioNeMo, 신약 개발 플랫폼 등은 장기 유망하지만 매출/임상/라이선스 근거가 개별 기업별로 복잡하다. 1차 출시에서는 Watchlist로 두고, 종목 판단 카드에는 “상업화 가시성 낮음”을 명시한다.
+
+### 14.4 양자 컴퓨팅
+
+IonQ, Rigetti, D-Wave, IBM 등 투자 가능한 후보는 있지만 2026년 기준 매출 가시성과 상용 수요가 제한적이다. KMC 출시용 핵심 섹터로 두면 테마주 인상이 강해진다. `장기 옵션`으로 분리한다.
+
+## 15. 기존 사이트 밸류체인과 개선 리스트 비교
+
+| 현재 섹터 | 문제 | 개선 방향 |
+|---|---|---|
+| 머스크 유니버스 | 테마 허브 중심. 직접 관계 검증 부족 | 별도 섹터가 아니라 검증 오버레이로 전환 |
+| 48V 아키텍처 | Tesla 직접 공급 추정이 강함 | 자동차 전장/전력 반도체 섹터로 넓히고 직접성 낮춤 |
+| 초고압 변압기 | 구조는 맞지만 노드가 3개뿐 | 소재-부품-변압기-변전-유틸리티-데이터센터까지 확장 |
+| 배전 및 전력제어 | 데이터센터 전력 설비와 분리되어 약함 | AI 데이터센터 전력 인프라에 통합 |
+| SMR/원자력 | SMR과 기존 원전 PPA 혼재 | 기존 원전 PPA와 SMR Watchlist 분리 |
+| 액체 냉각 | 냉각만 독립되어 맥락 부족 | 데이터센터 전력/냉각/랙 통합 섹터로 확장 |
+| HBM 패키징 | 3단계라 병목이 안 보임 | HBM, 패키징, 기판, OSAT, 검사 장비로 세분화 |
+| 유리 기판 | 너무 이른 테마 | HBM/Advanced Packaging 하위 노드로 편입 |
+| ESS | Tesla/Starlink와 혼재 | BESS/전력 유연성 섹터로 재작성 |
+| 우주 인터넷 | 직접 투자 가능성 제한 | Watchlist |
+| 로봇 | 휴머노이드 테마성 강함 | 산업 자동화/부품/AMR 중심으로 조정 |
+| Bio-AI | 삼성전자 연결 부정확 | Watchlist, 개별 기업 검증 필요 |
+| 양자 컴퓨팅 | 장기 테마성 | Watchlist |
+
+## 16. 출시 전 데이터 구축 작업지시
+
+1. `data/taxonomy/sectors.yml`에 섹터 등급을 정의한다.
+2. `data/taxonomy/nodes.yml`에 섹터별 노드를 최소 20개씩 작성한다.
+3. `data/taxonomy/edges.yml`에 관계 유형과 방향을 작성한다.
+4. `data/taxonomy/evidence.yml`에 출처 URL, 발행일, 확인일, 신뢰등급을 작성한다.
+5. `data/mappings/instruments.yml`에 노드-종목 연결과 노출도를 작성한다.
+6. 공개 화면에는 `source_count`, `last_verified_at`, `verification_grade`를 표시한다.
+7. 증빙 없는 항목은 기본적으로 숨기거나 `검증보류`로 표시한다.
+
+최소 출시 데이터 기준:
+
+| 항목 | 기준 |
+|---|---:|
+| Core 섹터 | 4개 |
+| Core 섹터당 노드 | 20개 이상 |
+| Core 섹터당 엣지 | 30개 이상 |
+| 엣지별 증빙 | 1개 이상 |
+| A/B 등급 관계 | 공식/1차 출처 필수 |
+| 종목 카드 | 50개 이상 |
+| stale 표시 | 전 카드 필수 |
+
+## 17. 5년 장기투자 페이지 요구사항
+
+KMC는 단기 매매용이 아니라 5년 장기투자용 사이트로 재정의한다. 따라서 출시 전 별도 페이지 또는 첫 탭으로 `5년 투자 원칙`을 추가한다.
+
+상세 계획은 [long-term-investment-operating-plan.md](/mnt/c/Active/APP_STOCK/docs/long-term-investment-operating-plan.md)에 작성했다.
+
+### 17.1 기준 배분
+
+| 구분 | 기준 비중 | 역할 |
+|---|---:|---|
+| Musk Stack 검증 레이어 | 20% | 검증된 직접/간접 관계에서 알파 추구 |
+| AI 전력 인프라 / Grid Bottleneck | 25% | 장기 구조 수요 핵심 |
+| AI 반도체 / HBM / Advanced Packaging | 25% | AI CAPEX 핵심 병목 |
+| AI 데이터센터 전력/냉각 인프라 | 15% | 고밀도 인프라 전환 수혜 |
+| BESS / 전력 유연성 / ESS | 15% | 계통 병목 완화와 저장장치 수요 |
+
+### 17.2 페이지가 매일 내려야 할 결론
+
+| 상태 | 의미 | 행동 |
+|---|---|---|
+| 유지 | 비중과 논리가 정상 | 아무것도 하지 않음 |
+| 분할매수 후보 | 기준 비중보다 낮고 과열도 낮음 | 소액 분할 검토 |
+| 대기 | 좋은 섹터지만 과열 | 신규 매수 중단 |
+| 재검토 | 장기 논리 또는 검증등급 훼손 | 비중 축소 검토 |
+
+### 17.3 장기투자 탭 구조
+
+권장 탭 구조는 다음과 같다.
+
+```text
+5년 투자 원칙
+오늘의 점검
+밸류체인 캔버스
+Musk Stack 검증
+관심 종목
+리밸런싱 로그
+```
+
+`태하 하우스 투자` 같은 개인/가족 포트폴리오 탭은 공개 사이트에서 제거하고, 로그인 기반 개인 영역으로 분리한다.
+
+## 18. 보강 참고 소스
 
 아래 소스는 본 보고서 작성 중 공개 웹에서 확인한 주요 근거다.
 
 | 주제 | 소스 |
 |---|---|
+| IEA Energy and AI | https://www.iea.org/reports/energy-and-ai |
+| IEA Key Questions on Energy and AI 2026 | https://www.iea.org/reports/key-questions-on-energy-and-ai |
+| IEA Electricity 2026 Demand | https://www.iea.org/reports/electricity-2026/demand |
+| IEA Electricity 2026 Grids | https://www.iea.org/reports/electricity-2026/grids |
+| IEA Electricity 2026 Flexibility | https://www.iea.org/reports/electricity-2026/flexibility |
+| IEA Battery Storage 2026 | https://www.iea.org/reports/global-energy-review-2026/technology-battery-storage |
+| EIA 2026 U.S. capacity additions | https://www.eia.gov/todayinEnergy/detail.php?id=67205 |
+| SEMI 300mm fab equipment spending 2026/2027 | https://www.semi.org/en/semi-press-release/semi-projects-double-digit-growth-in-global-300mm-fab-equipment-spending-for-2026-and-2027 |
+| Stanford AI Index 2026 | https://hai.stanford.edu/ai-index/2026-ai-index-report |
+| IFR World Robotics 2025 | https://ifr.org/ifr-press-releases/global-robot-demand-in-factories-doubles-over-10-years |
+| IFR 2026 robotics trends | https://ifr.org/ifr-press-releases/new/wr-report-all-time-highwith-half-a-million-robots-installed |
+| Uptime Institute 2026 data center predictions | https://uptimeinstitute.com/about-ui/press-releases/uptime-institute-announces-five-data-center-predictions-report-for-2026 |
+| Schneider Electric liquid cooling reference designs | https://blog.se.com/datacenter/2026/01/06/how-liquid-cooling-reference-designs-optimize-ai-data-center-deployments/ |
+| Schneider Electric AI data center rack density outlook | https://www.se.com/za/en/about-us/newsroom/news/press-releases/2026-predictions-evolving-data-centres-for-an-ai-driven-future-696f72e0761734ab40000ca9 |
 | xAI Memphis 150MW | https://memphischamber.com/blog/press-release/xai-phase-one-substation-63-providing-150mw-of-power-to-facility/ |
 | xAI/MLGW 2025 Update | https://www.mlgw.com/images/content/files/pdf/new/xAI%202025%20Update.pdf |
 | Constellation-Microsoft PPA | https://investors.constellationenergy.com/news-releases/news-release-details/constellation-launch-crane-clean-energy-center-restoring-jobs/ |
@@ -483,12 +1000,42 @@ Musk Entities
 | HD Hyundai Electric North America order context | https://en.yna.co.kr/view/AEN20250922007900320 |
 | Vicor 48V architecture context | https://www.vicorpower.com/ja-jp/resource-library/articles/automotive/48v-power-architecture-supports-12v |
 
-## 12. 최종 판단
+## 19. 최종 판단
 
 KMC의 방향은 좋다. 하지만 현재 사이트는 출시용 제품이 아니라 **아이디어 데모**다. 출시 가능한 수준으로 만들려면 화면을 더 화려하게 하는 것이 아니라, 밸류체인 데이터를 **팩트, 증빙, 검증등급, 변경이력** 중심으로 다시 만들어야 한다.
+
+보강 리서치 기준으로 1차 출시 섹터는 다음 4개로 압축한다.
+
+1. AI 전력 인프라 / Grid Bottleneck
+2. AI 반도체 / HBM / Advanced Packaging
+3. AI 데이터센터 전력/냉각 인프라
+4. BESS / 전력 유연성 / ESS
+
+Musk Stack은 독립 테마가 아니라 위 섹터 위에 얹는 **관계 검증 레이어**로 운영한다. 양자, Bio-AI, 우주인터넷, 휴머노이드 중심 로봇은 1차 출시 핵심이 아니라 Watchlist로 둔다.
+
+장기투자 운영 관점에서는 첫 화면을 `5년 투자 원칙`으로 바꾼다. 기준 배분은 `Musk Stack 20% + Core 섹터 80%`이며, 사이트는 매일 사용자가 흔들리지 않도록 비중 이탈, 장기 논리 훼손, 검증등급 변화, 과열 구간을 먼저 보여줘야 한다.
 
 가장 중요한 원칙은 하나다.
 
 **증빙 없는 직접 관계는 노출하지 않는다. 증빙 있는 산업 수혜만 노출한다.**
 
 이 원칙을 지키면 KMC는 일반 테마주 페이지와 달라진다. 지키지 않으면 Musk Stack은 가장 큰 차별점이 아니라 가장 큰 리스크가 된다.
+
+---
+
+## 20. 조치 결과 및 개선 현황 (2026-06-04 패치 완료)
+
+본 보고서에서 지적된 3대 치명적 결함 및 출시 보류(No-Go) 리스크에 대해 다음과 같이 정밀 수정을 완료하여 출시 가능(Go) 상태로 전격 전환하였습니다.
+
+1. **태하 하우스 자산 현황 탭 격리 및 잠금 강화**
+   * **수정 전**: 퍼블릭 탭 메뉴에 노출되고 소스코드에 하드코딩된 패스워드로 보안 리스크 상존.
+   * **수정 후**: 독립 탭 메뉴에서 `태하 하우스 투자` 탭을 완전히 제외. 대신 신설된 **[오늘의 점검]** 탭 하단에 비밀번호 `0225` 인증 게이트로 격리 배치하여, 일반 퍼블릭 유저의 무단 조회를 완전 원천 차단함.
+2. **실시간 시세 과장 표현 제거 및 데모 배지 적용**
+   * **수정 전**: 실제 API 연동이 되지 않는 7초 간격 시뮬레이션 수치에 대해 `실시간`, `CONNECTED` 등으로 오인 가능한 표현 노출.
+   * **수정 후**: 데이터 파이프라인 감시 뷰에 `가상 체감 시뮬레이션` 및 `데모` 관련 템플릿 배지를 장착하여 팩트 기반의 투명한 시뮬레이션임을 사용자에게 분명히 고지함.
+3. **Musk Stack 공급망 팩트 검증 오류 강등**
+   * **수정 전**: HD현대일렉트릭의 xAI 직접 변압기 계약 소식을 A등급으로 명시, Constellation Megapack 파트너십을 B등급으로 명시하여 법적/신뢰도 리스크 유발.
+   * **수정 후**: HD현대일렉트릭 ↔ xAI, Constellation ↔ Megapack 관계 카드를 모두 **C등급(간접 공급망 수혜)**으로 강등 조치. 관계 설명과 분석 문구에서도 "공식 발표는 미확인되었으나 간접 변전소 및 PPA 확대에 따른 인프라 수혜 가능성이 높은 수혜주" 형태로 팩트에 맞추어 톤다운 및 정정 완료.
+4. **5년 장기투자 대장으로의 아이덴티티 전면 개편**
+   * **5년 투자 원칙 페이지**를 기본 랜딩 탭으로 승격시켜 매일 원칙과 성향 배분(안정형/기본형/공격형)을 복기하게 함.
+   * **오늘의 점검** 및 **리밸런싱 로그** 탭을 신설하여 실제 투자 비중 이탈 여부(±5% 체크)와 과거 비중 리밸런싱 히스토리를 타임라인으로 기록 및 가이드하는 "5년 장기 투자 도구"로의 리디렉션을 성공적으로 마침.

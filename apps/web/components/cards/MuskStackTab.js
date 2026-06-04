@@ -7,32 +7,12 @@ import InstrumentCard from './InstrumentCard';
 // Musk Stack 관계 데이터
 const MUSK_STACK_DATA = [
   {
-    id: 'hde_memphis',
-    subject: 'HD현대일렉트릭 ↔ xAI 멤피스 슈퍼클러스터',
-    rank: 'A',
-    relationType: '직접 전력망 변압기 수주',
-    summary: 'xAI 멤피스 AI 데이터센터 구동을 위한 150MW 신규 전력 변전소 프로젝트에 변압기 직접 공급 합의.',
-    evidence: '테네시 전력청(TVA) 계약 공시 문서 및 멤피스 유틸리티 위원회 회의록',
-    evidenceUrl: 'https://www.tva.com',
-    instrument: {
-      name: 'HD현대일렉트릭',
-      ticker: '267260',
-      sector: '초고압 변압기',
-      fit: 92,
-      overheat: 88,
-      price: '284,500원',
-      change: '+8.4%',
-      volumeSignal: '외인 집중 매수',
-      analysis: 'xAI 직접 수주 모멘텀으로 단기 급등했으나, 글로벌 전력 그리드 사이클 장기화 수혜 최선호주.'
-    }
-  },
-  {
     id: 'eaton_tesla',
     subject: 'Eaton Corp ↔ Tesla Gigafactory Texas',
     rank: 'A',
     relationType: '기가팩토리 배전설비 공급',
-    summary: '테슬라 기가 텍사스 및 사이버트럭 생산 라인의 지능형 배전 스위치기어 및 스위치보드 직접 납품.',
-    evidence: 'Tesla Giga Texas EPC 협력사 공급 내역서',
+    summary: '테슬라 기가 텍사스 및 사이버트럭 생산 라인의 지능형 배전 스위치기어 및 스위치보드 직접 납품 확인.',
+    evidence: 'Tesla Giga Texas EPC 협력사 공급 내역서 및 보도자료',
     evidenceUrl: 'https://www.eaton.com',
     instrument: {
       name: 'Eaton Corp plc',
@@ -44,6 +24,46 @@ const MUSK_STACK_DATA = [
       change: '+1.8%',
       volumeSignal: '안정적 기관 매집',
       analysis: '미국 내 송배전 장비 1위 사업자로 테슬라 공장 증설 및 AI 전력 부하 매칭 제품군 최강의 안정성 보유.'
+    }
+  },
+  {
+    id: 'hde_memphis',
+    subject: 'HD현대일렉트릭 ↔ 북미 AI 전력망 증설 수혜',
+    rank: 'C',
+    relationType: '간접 전력망 변압기 증설 수혜',
+    summary: 'MLGW/TVA의 xAI 데이터센터 150MW 전력 공급망 변전소 확충 관련하여 간접적인 초고압 변압기 증설 및 공급망 확장 수혜.',
+    evidence: 'MLGW xAI 2025 Update 보고서 및 북미 송배전 사이클 수주 공시 (xAI 직접 수주 공식 발표는 부재)',
+    evidenceUrl: 'https://www.mlgw.com/images/content/files/pdf/new/xAI%202025%20Update.pdf',
+    instrument: {
+      name: 'HD현대일렉트릭',
+      ticker: '267260',
+      sector: '초고압 변압기',
+      fit: 82,
+      overheat: 88,
+      price: '284,500원',
+      change: '+8.4%',
+      volumeSignal: '외인 집중 매수',
+      analysis: 'xAI 직접 계약 공시는 공식 확인되지 않았으나, MLGW/TVA 변전소 송배전 사이클에 따른 간접 수혜 개연성이 높은 최선호주.'
+    }
+  },
+  {
+    id: 'ceg_tesla_megapack',
+    subject: 'Constellation Energy ↔ AI 데이터센터 전력 PPA',
+    rank: 'C',
+    relationType: 'AI 전력 원전 PPA (Microsoft 연동)',
+    summary: 'Microsoft와의 Three Mile Island 원전 재가동 20년 PPA 체결을 통한 AI 데이터센터 무탄소 전력 공급 사업 추진.',
+    evidence: 'Constellation IR 공시 (Crane Clean Energy Center)',
+    evidenceUrl: 'https://investors.constellationenergy.com/news-releases/news-release-details/constellation-launch-crane-clean-energy-center-restoring-jobs',
+    instrument: {
+      name: 'Constellation Energy',
+      ticker: 'CEG',
+      sector: '원자력 발전',
+      fit: 80,
+      overheat: 82,
+      price: '$220.5',
+      change: '+4.8%',
+      volumeSignal: '거래대금 상위',
+      analysis: 'Microsoft-TMI PPA 기반의 인프라 직결 아이콘. 테슬라 메가팩과의 직접적 파트너십 증빙은 부재하여 간접 인프라 수혜로 조정.'
     }
   },
   {
@@ -64,26 +84,6 @@ const MUSK_STACK_DATA = [
       change: '+3.2%',
       volumeSignal: '외인/기관 양매수',
       analysis: '엔비디아 밸류체인의 핵심이자 테슬라향 간접 비중 확대 흐름. HBM 독점적 지위 견고.'
-    }
-  },
-  {
-    id: 'ceg_tesla_megapack',
-    subject: 'Constellation Energy ↔ Tesla Megapack Grid',
-    rank: 'B',
-    relationType: '친환경 청정에너지 파트너십',
-    summary: 'Constellation의 원자력 전력망과 테슬라의 대용량 에너지 저장장치(메가팩)를 결합하여 24시간 중단 없는 무탄소 전력 공급 시스템 시범 운영 제휴.',
-    evidence: 'Constellation Clean Energy PPA 사업 보도 및 Tesla Energy 파트너 세미나 발표',
-    evidenceUrl: 'https://www.constellationenergy.com',
-    instrument: {
-      name: 'Constellation Energy',
-      ticker: 'CEG',
-      sector: '원자력 발전',
-      fit: 90,
-      overheat: 82,
-      price: '$220.5',
-      change: '+4.8%',
-      volumeSignal: '거래대금 상위',
-      analysis: '원전-AI 전력 직결의 아이콘. 테슬라 메가팩과의 결합 사업 확대로 유틸리티 섹터 내 높은 프리미엄 정당화.'
     }
   }
 ];

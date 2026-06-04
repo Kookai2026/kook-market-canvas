@@ -3,18 +3,21 @@
 import { useState, useEffect } from 'react';
 import { 
   FileText, Star, Activity, Sparkles, CheckCircle2, 
-  TrendingUp, Compass, User, ExternalLink, Network, Layers, ShieldCheck, Home as HomeIcon
+  TrendingUp, Compass, User, ExternalLink, Network, Layers, ShieldCheck, Home as HomeIcon,
+  BookOpen, CheckSquare
 } from 'lucide-react';
 
 import SignalFeed from '../components/news/SignalFeed';
 import FavoriteList, { STOCKS_POOL } from '../components/favorites/FavoriteList';
 import ValueChainCanvas from '../components/canvas/ValueChainCanvas';
 import MuskStackTab from '../components/cards/MuskStackTab';
-import MarketHeatmap from '../components/heatmap/MarketHeatmap';
-import TaehaPortfolio from '../components/favorites/TaehaPortfolio';
+
+import PrinciplesTab from '../components/principles/PrinciplesTab';
+import DailyCheckTab from '../components/check/DailyCheckTab';
+import RebalanceLogTab from '../components/log/RebalanceLogTab';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('dashboard'); // dashboard, canvas, musk, heatmap, portfolio
+  const [activeTab, setActiveTab] = useState('principles'); // 기본 첫 랜딩화면을 '5년 투자 원칙'으로 설정
   const [favorites, setFavorites] = useState(['267260', 'NVDA']); // 기본 즐겨찾기 종목
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -110,45 +113,73 @@ export default function Home() {
       {/* 탭 네비게이션 바 */}
       <nav className="tab-nav">
         <button 
-          className={`tab-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
-          onClick={() => setActiveTab('dashboard')}
+          className={`tab-btn ${activeTab === 'principles' ? 'active' : ''}`}
+          onClick={() => setActiveTab('principles')}
         >
-          <Compass size={16} />
-          <span>투자 리서치 대시보드</span>
+          <BookOpen size={16} />
+          <span>5년 투자 원칙</span>
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'daily-check' ? 'active' : ''}`}
+          onClick={() => setActiveTab('daily-check')}
+        >
+          <CheckSquare size={16} />
+          <span>오늘의 점검</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'canvas' ? 'active' : ''}`}
           onClick={() => setActiveTab('canvas')}
         >
           <Layers size={16} />
-          <span>밸류체인 마인드 맵</span>
+          <span>밸류체인 캔버스</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'musk' ? 'active' : ''}`}
           onClick={() => setActiveTab('musk')}
         >
           <ShieldCheck size={16} />
-          <span>Musk 공급망 검증</span>
+          <span>Musk Stack 검증</span>
         </button>
         <button 
-          className={`tab-btn ${activeTab === 'heatmap' ? 'active' : ''}`}
-          onClick={() => setActiveTab('heatmap')}
+          className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
+          onClick={() => setActiveTab('favorites')}
         >
-          <TrendingUp size={16} />
-          <span>마켓 히트맵</span>
+          <Star size={16} />
+          <span>관심 종목</span>
         </button>
         <button 
-          className={`tab-btn ${activeTab === 'portfolio' ? 'active' : ''}`}
-          onClick={() => setActiveTab('portfolio')}
-          style={{ borderLeft: '1px solid var(--border)', paddingLeft: '16px' }}
+          className={`tab-btn ${activeTab === 'rebalance-log' ? 'active' : ''}`}
+          onClick={() => setActiveTab('rebalance-log')}
         >
-          <HomeIcon size={16} style={{ color: 'var(--success)' }} />
-          <span style={{ color: '#fff', fontWeight: '600' }}>태하 하우스 투자</span>
+          <FileText size={16} />
+          <span>리밸런싱 로그</span>
         </button>
       </nav>
 
       {/* 탭 내용 분기 */}
-      {activeTab === 'dashboard' && (
+      {activeTab === 'principles' && (
+        <PrinciplesTab />
+      )}
+
+      {activeTab === 'daily-check' && (
+        <DailyCheckTab />
+      )}
+
+      {activeTab === 'canvas' && (
+        <ValueChainCanvas 
+          favorites={favorites} 
+          onToggleFavorite={toggleFavorite} 
+        />
+      )}
+
+      {activeTab === 'musk' && (
+        <MuskStackTab 
+          favorites={favorites} 
+          onToggleFavorite={toggleFavorite} 
+        />
+      )}
+
+      {activeTab === 'favorites' && (
         <div className="main-grid">
           {/* 좌측: 실시간 뉴스 및 시그널 피드 */}
           <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -196,26 +227,8 @@ export default function Home() {
         </div>
       )}
 
-      {activeTab === 'canvas' && (
-        <ValueChainCanvas 
-          favorites={favorites} 
-          onToggleFavorite={toggleFavorite} 
-        />
-      )}
-
-      {activeTab === 'musk' && (
-        <MuskStackTab 
-          favorites={favorites} 
-          onToggleFavorite={toggleFavorite} 
-        />
-      )}
-
-      {activeTab === 'heatmap' && (
-        <MarketHeatmap />
-      )}
-
-      {activeTab === 'portfolio' && (
-        <TaehaPortfolio />
+      {activeTab === 'rebalance-log' && (
+        <RebalanceLogTab />
       )}
     </main>
   );
