@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { Network, HelpCircle, Layers, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import InstrumentCard from '../cards/InstrumentCard';
 
-// 11대 개별 섹터 고유의 밸류체인 상세 맵 데이터 (피드백 반영 - 짬뽕하지 않고 독립적으로 분할)
+// 11대 독립 유망 섹터 캔버스 맵 데이터 (양자 컴퓨팅 전면 도입 및 테슬라 이외 범용 독립화 개편)
 const CANVASES_DATA = {
   tesla_universe: {
     title: '👑 xAI & 테슬라 (머스크 유니버스)',
@@ -16,16 +16,16 @@ const CANVASES_DATA = {
         x: 370, y: 230, w: 260, h: 70,
         description: '머스크의 핵심 AI 의사결정체. FSD, 옵티머스 로봇, 데이터센터 등을 유기적으로 통제.',
         instruments: [
-          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '머스크 유니버스', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 매수 우위', analysis: '자율주행 FSD 라이선싱 시도 및 차세대 보급형 차량 모멘텀 대기.' }
+          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '머스크 유니버스', fit: 90, overheat: 58, price: '$176.5', change: '+3.2%', volumeSignal: '기관 매수 우위', analysis: '자율주행 FSD 라이선싱 시도 및 차세대 보급형 차량 모멘텀 대기.' }
         ]
       },
       memphis: {
         id: 'memphis',
-        name: '🖥️ xAI 멤피스 슈퍼클러스터',
+        name: '🖥️ xAI 멤피스 데이터센터',
         x: 50, y: 120, w: 230, h: 60,
         description: '10만 개의 H100 GPU가 가동되는 세계 최대 인공지능 학습 기지. 150MW급 전력 조달이 핵심 과제.',
         instruments: [
-          { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', sector: '머스크 유니버스', fit: 88, overheat: 84, price: '$94.2', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '멤피스 데이터센터용 핵심 액체냉각 솔루션 메인 공급사.' }
+          { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', sector: '머스크 유니버스', fit: 88, overheat: 84, price: '$98.4', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '멤피스 데이터센터용 핵심 액체냉각 솔루션 메인 공급사.' }
         ]
       },
       starlink: {
@@ -73,7 +73,7 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '48V 고압 스위칭 및 변환 시 발생하는 에너지 손실을 극소화하는 차량용 반도체 소자.',
         instruments: [
-          { name: '온세미 (onsemi)', ticker: 'ON', sector: '48V 전력 아키텍처', fit: 85, overheat: 58, price: '$72.4', change: '+1.2%', volumeSignal: '외인 매수 우위', analysis: '실리콘카바이드(SiC) 전력 소자 선두권 보유. 48V E/E 변환 핵심 수혜.' }
+          { name: '온세미 (onsemi)', ticker: 'ON', sector: '48V 전력 아키텍처', fit: 85, overheat: 58, price: '$74.2', change: '+1.2%', volumeSignal: '외인 매수 우위', analysis: '실리콘카바이드(SiC) 전력 소자 선두권 보유. 48V E/E 변환 핵심 수혜.' }
         ]
       },
       midstream: {
@@ -82,7 +82,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '48V 고전압을 차량 내 통신 및 센서용 저전압으로 미세 조율해주는 전력 변환 컨버터 모듈.',
         instruments: [
-          { name: '바이코 (Vicor Corp)', ticker: 'VICR', sector: '48V 전력 아키텍처', fit: 88, overheat: 62, price: '$42.8', change: '+3.5%', volumeSignal: '기관 순매수 전환', analysis: '테슬라 사이버트럭용 48V 파워 모듈 공급 파트너. 변환 모듈 1인자 기술력.' }
+          { name: '바이코 (Vicor Corp)', ticker: 'VICR', sector: '48V 전력 아키텍처', fit: 88, overheat: 62, price: '$44.5', change: '+3.5%', volumeSignal: '기관 순매수 전환', analysis: '테슬라 사이버트럭용 48V 파워 모듈 공급 파트너. 변환 모듈 1인자 기술력.' }
         ]
       },
       downstream: {
@@ -91,7 +91,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '48V 통합 기판에 쓰이는 고내구성 차세대 와이어링 하네스 및 핀 커넥터.',
         instruments: [
-          { name: '이튼 코퍼레이션 (Eaton)', ticker: 'ETN', sector: '48V 전력 아키텍처', fit: 84, overheat: 65, price: '$312.4', change: '+1.8%', volumeSignal: '기관 매집', analysis: '산업용에서 자율주행 차량 전력 관리 허브로 공급 비중 확대 중.' }
+          { name: '이튼 코퍼레이션 (Eaton)', ticker: 'ETN', sector: '48V 전력 아키텍처', fit: 84, overheat: 65, price: '$324.5', change: '+1.8%', volumeSignal: '기관 매집', analysis: '산업용에서 자율주행 차량 전력 관리 허브로 공급 비중 확대 중.' }
         ]
       }
     },
@@ -110,8 +110,8 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '변압기 코어(철심)와 코일용 고순도 전기강판 및 동(구리) 자재 공급망.',
         instruments: [
-          { name: '포스코홀딩스', ticker: '005490', sector: '초고압 변압기', fit: 74, overheat: 42, price: '385,000원', change: '+1.2%', volumeSignal: '기관 순매수', analysis: '변압기 철심의 최고급 재료인 방향성 전기강판(GO) 국내 독점적 공급.' },
-          { name: '풍산', ticker: '103140', sector: '초고압 변압기', fit: 80, overheat: 68, price: '64,200원', change: '+3.5%', volumeSignal: '거래 급증', analysis: '구리 가격 랠리와 연동되어 변압기 전선용 동 가공 수혜 흡수.' }
+          { name: '포스코홀딩스', ticker: '005490', sector: '철강/GO소재', fit: 74, overheat: 42, price: '374,000원', change: '+1.2%', volumeSignal: '기관 순매수', analysis: '변압기 철심의 최고급 재료인 방향성 전기강판(GO) 국내 독점적 공급.' },
+          { name: '풍산', ticker: '103140', sector: '구리/케이블', fit: 80, overheat: 68, price: '68,200원', change: '+3.5%', volumeSignal: '거래 급증', analysis: '구리 가격 랠리와 연동되어 변압기 전선용 동 가공 수혜 흡수.' }
         ]
       },
       midstream: {
@@ -120,8 +120,8 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '송전 그리드의 중추가 되는 고전압(220kV~765kV) 전력 변압기 완제품 조립 및 설계.',
         instruments: [
-          { name: 'HD현대일렉트릭', ticker: '267260', sector: '초고압 변압기', fit: 92, overheat: 88, price: '284,500원', change: '+8.4%', volumeSignal: '외인 매수 우위', analysis: '미국 데이터센터 수주 폭발로 2029년까지 물량 예약 완료. 수익성 극대화.' },
-          { name: '효성중공업', ticker: '298040', sector: '초고압 변압기', fit: 86, overheat: 76, price: '312,000원', change: '+4.2%', volumeSignal: '기관 유입', analysis: '미국 현지 멤피스 변압기 공장의 매출 반영이 본격 시작되는 시점.' }
+          { name: 'HD현대일렉트릭', ticker: '267260', sector: '초고압 변압기', fit: 92, overheat: 88, price: '335,500원', change: '+8.4%', volumeSignal: '외인 매수 우위', analysis: '미국 데이터센터 수주 폭발로 2029년까지 물량 예약 완료. 수익성 극대화.' },
+          { name: '효성중공업', ticker: '298040', sector: '초고압 변압기', fit: 86, overheat: 76, price: '352,000원', change: '+4.2%', volumeSignal: '기관 유입', analysis: '미국 현지 멤피스 변압기 공장의 매출 반영이 본격 시작되는 시점.' }
         ]
       },
       downstream: {
@@ -130,7 +130,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '변압기를 대량 매집하여 송배전 전력망을 실제로 운영하는 인프라 기업.',
         instruments: [
-          { name: '넥스트에라 에너지 (NextEra)', ticker: 'NEE', sector: '초고압 변압기', fit: 78, overheat: 52, price: '$72.4', change: '+0.5%', volumeSignal: '안정수급', analysis: '북미 최대 유틸리티사로 변압기 등 인프라 조달을 대량 진행 중.' }
+          { name: '넥스트에라 에너지 (NextEra)', ticker: 'NEE', sector: '미국 유틸리티', fit: 78, overheat: 52, price: '$72.4', change: '+0.5%', volumeSignal: '안정수급', analysis: '북미 최대 유틸리티사로 변압기 등 인프라 조달을 대량 진행 중.' }
         ]
       }
     },
@@ -149,7 +149,7 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '과전류 발생 시 즉시 전기를 차단해 기기를 보호하는 내부 핵심 전기 전자 부품.',
         instruments: [
-          { name: 'LS일렉트릭', ticker: '010120', sector: '배전 및 전력 제어', fit: 82, overheat: 74, price: '198,200원', change: '+2.1%', volumeSignal: '개인 매수', analysis: '스마트 스위치기어 및 차단기 설비 미국 진출 가시성 확보.' }
+          { name: 'LS일렉트릭', ticker: '010120', sector: '배전 및 전력기기', fit: 82, overheat: 74, price: '218,000원', change: '+2.1%', volumeSignal: '개인 매수', analysis: '스마트 스위치기어 및 차단기 설비 미국 진출 가시성 확보.' }
         ]
       },
       midstream: {
@@ -158,7 +158,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '스위치와 릴레이 등을 하나의 철제 함에 집약하여 배전을 총 제어하는 시스템 캐비닛.',
         instruments: [
-          { name: '이튼 코퍼레이션 (Eaton)', ticker: 'ETN', sector: '배전 및 전력 제어', fit: 84, overheat: 65, price: '$312.4', change: '+1.8%', volumeSignal: '기관 매집', analysis: '미국 배전 시장 독과점 주주. 데이터센터 랙 전원 차단 시스템 주도.' }
+          { name: '이튼 코퍼레이션 (Eaton)', ticker: 'ETN', sector: '배전 및 전력기기', fit: 84, overheat: 65, price: '$324.5', change: '+1.8%', volumeSignal: '기관 매집', analysis: '미국 배전 시장 독과점 주주. 데이터센터 랙 전원 차단 시스템 주도.' }
         ]
       },
       downstream: {
@@ -167,7 +167,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: 'AI 가속기 랙의 부하 급증에 맞춰 전력을 동적으로 분산 조절하는 최종 엔지니어링 시스템.',
         instruments: [
-          { name: '슈나이더 일렉트릭 (Schneider)', ticker: 'SU.PA', sector: '배전 및 전력 제어', fit: 80, overheat: 58, price: '215.3€', change: '+0.9%', volumeSignal: '유럽 자금', analysis: '스마트 빌딩 및 AI 데이터센터 에너지 제어 소프트웨어 강점.' }
+          { name: '슈나이더 일렉트릭 (Schneider)', ticker: 'SU.PA', sector: '배전 및 전력기기', fit: 80, overheat: 58, price: '215.3€', change: '+0.9%', volumeSignal: '유럽 자금', analysis: '스마트 빌딩 및 AI 데이터센터 에너지 제어 소프트웨어 강점.' }
         ]
       }
     },
@@ -186,7 +186,7 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '소형 모듈형 원자로(SMR)에 들어가는 고인성 합금 압력 용기 및 핵심 기자재 제조.',
         instruments: [
-          { name: '뉴스케일 파워 (NuScale)', ticker: 'SMR', sector: 'SMR & 원자력 발전', fit: 76, overheat: 65, price: '$10.4', change: '+1.5%', volumeSignal: '개인 유입', analysis: '미국 SMR 개발사 중 유일하게 NRC 설계 승인을 완료해 실증 최고 수혜.' }
+          { name: '뉴스케일 파워 (NuScale)', ticker: 'SMR', sector: 'SMR & 원자력 발전', fit: 76, overheat: 65, price: '$12.4', change: '+1.5%', volumeSignal: '개인 유입', analysis: '미국 SMR 개발사 중 유일하게 NRC 설계 승인을 완료해 실증 최고 수혜.' }
         ]
       },
       midstream: {
@@ -195,7 +195,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '원자력 노형 설계 특허를 활용해 발전소를 안전하게 건설하는 종합 엔지니어링.',
         instruments: [
-          { name: '비스트라 에너지 (Vistra)', ticker: 'VST', sector: 'SMR & 원자력 발전', fit: 87, overheat: 79, price: '$88.4', change: '+5.3%', volumeSignal: '헤지펀드 매집', analysis: '텍사스 내 대규모 민간 원전 인수로 전력 공급 능력 탑티어 부각.' }
+          { name: '비스트라 에너지 (Vistra)', ticker: 'VST', sector: 'SMR & 원자력 발전', fit: 87, overheat: 79, price: '$90.4', change: '+5.3%', volumeSignal: '헤지펀드 매집', analysis: '텍사스 내 대규모 민간 원전 인수로 전력 공급 능력 탑티어 부각.' }
         ]
       },
       downstream: {
@@ -204,7 +204,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '가동 중인 원전의 배전 권리를 가지고 테크 자이언트에게 장기 전력 구매 계약(PPA)을 맺는 최종 홀딩스.',
         instruments: [
-          { name: '콘스텔레이션 에너지 (CEG)', ticker: 'CEG', sector: 'SMR & 원자력 발전', fit: 90, overheat: 82, price: '$220.5', change: '+4.8%', volumeSignal: '거래대금 상위', analysis: 'MS 스리마일섬 원전 전력 공급 PPA 성사로 전력-AI 밸류에이션 리레이팅 선도.' }
+          { name: '콘스텔레이션 에너지 (CEG)', ticker: 'CEG', sector: 'SMR & 원자력 발전', fit: 90, overheat: 82, price: '$225.5', change: '+4.8%', volumeSignal: '거래대금 상위', analysis: 'MS 스리마일섬 원전 전력 공급 PPA 성사로 전력-AI 밸류에이션 리레이팅 선도.' }
         ]
       }
     },
@@ -223,7 +223,7 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '직접 침전식 냉각(Immersion Cooling)에 사용되는 전자 비도전성 절연 특수 냉각액.',
         instruments: [
-          { name: '모다인 매뉴팩처링 (Modine)', ticker: 'MOD', sector: '액체 냉각 솔루션', fit: 78, overheat: 69, price: '$112.5', change: '+3.1%', volumeSignal: '기관 순매수', analysis: '특수 목적 냉매 관리 열교환기 라인 확보로 고밀도 랙 대응 본격화.' }
+          { name: '모다인 매뉴팩처링 (Modine)', ticker: 'MOD', sector: '액체 냉각 솔루션', fit: 78, overheat: 69, price: '$118.5', change: '+3.1%', volumeSignal: '기관 순매수', analysis: '특수 목적 냉매 관리 열교환기 라인 확보로 고밀도 랙 대응 본격화.' }
         ]
       },
       midstream: {
@@ -232,7 +232,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '칩셋에 직접 접촉해 열을 배출하는 콜드플레이트 및 냉각액 제어 장치(CDU).',
         instruments: [
-          { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', sector: '액체 냉각 솔루션', fit: 88, overheat: 84, price: '$94.2', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '엔비디아 블랙웰 수냉 설계 공식 파트너. 차세대 쿨링 모듈 납품 지위 확고.' }
+          { name: '버티브 홀딩스 (Vertiv)', ticker: 'VRT', sector: '액체 냉각 솔루션', fit: 88, overheat: 84, price: '$98.4', change: '+6.2%', volumeSignal: '외인 순매수', analysis: '엔비디아 블랙웰 수냉 설계 공식 파트너. 차세대 쿨링 모듈 납품 지위 확고.' }
         ]
       },
       downstream: {
@@ -241,7 +241,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '서버 랙 전체를 액체 냉각 파이프라인과 통합하여 공조 인프라를 완성하는 종합 설계.',
         instruments: [
-          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '액체 냉각 솔루션', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 유입', analysis: '멤피스 데이터센터 및 자체 Dojo 클러스터에 첨단 DLC 전면 도입 진행 중.' }
+          { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: 'AI 가속기 GPU', fit: 95, overheat: 85, price: '$121.2', change: '+4.1%', volumeSignal: '역대급 대금', analysis: '차세대 수냉 서버 랙 표준을 장악하기 위한 블랙웰 생태계 리드.' }
         ]
       }
     },
@@ -260,8 +260,8 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '실리콘을 미세 관통하고, 적층된 D램을 열압착하여 정밀 접합하는 후공정 장비.',
         instruments: [
-          { name: '한미반도체', ticker: '042700', sector: 'HBM 패키징', fit: 91, overheat: 78, price: '148,200원', change: '+6.8%', volumeSignal: '기관 순매수', analysis: '듀얼 TC 본더의 고점수 점유율 유지. 마이크론 및 글로벌 후공정 확장 수혜.' },
-          { name: 'ASMPT (홍콩)', ticker: '0522.HK', sector: 'HBM 패키징', fit: 76, overheat: 62, price: '92.4HK$', change: '+1.2%', volumeSignal: '중국계 자금', analysis: 'TSMC CoWoS 공정용 칩 온 웨이퍼 열압착 패키징 장비 납품 준비.' }
+          { name: '한미반도체', ticker: '042700', sector: 'HBM 패키징', fit: 91, overheat: 78, price: '162,000원', change: '+6.8%', volumeSignal: '기관 순매수', analysis: '듀얼 TC 본더의 고점수 점유율 유지. 마이크론 및 글로벌 후공정 확장 수혜.' },
+          { name: 'ASMPT (홍콩)', ticker: '0522.HK', sector: 'HBM 패키징', fit: 76, overheat: 62, price: '94.2HK$', change: '+1.2%', volumeSignal: '중국계 자금', analysis: 'TSMC CoWoS 공정용 칩 온 웨이퍼 열압착 패키징 장비 납품 준비.' }
         ]
       },
       midstream: {
@@ -270,8 +270,8 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '에칭과 본딩 가공을 통해 수집된 최종 HBM 3E / HBM4 메모리 다이.',
         instruments: [
-          { name: 'SK하이닉스', ticker: '000660', sector: 'HBM 패키징', fit: 89, overheat: 72, price: '188,500원', change: '+3.2%', volumeSignal: '외인/기관 매수', analysis: '엔비디아 HBM3E 점유율 독점 및 12단 양산 수율 선제 확보 메리트 유효.' },
-          { name: '삼성전자', ticker: '005930', sector: 'HBM 패키징', fit: 75, overheat: 50, price: '72,400원', change: '+0.8%', volumeSignal: '개인 유입', analysis: 'HBM3E 납품 테스트 완료 시 공급 다변화 퀄테스트 모멘텀 기대.' }
+          { name: 'SK하이닉스', ticker: '000660', sector: 'HBM 패키징', fit: 89, overheat: 72, price: '203,500원', change: '+3.2%', volumeSignal: '외인/기관 매수', analysis: '엔비디아 HBM3E 점유율 독점 및 12단 양산 수율 선제 확보 메리트 유효.' },
+          { name: '삼성전자', ticker: '005930', sector: 'HBM 패키징', fit: 75, overheat: 50, price: '77,400원', change: '+0.8%', volumeSignal: '개인 유입', analysis: 'HBM3E 납품 테스트 완료 시 공급 다변화 퀄테스트 모멘텀 기대.' }
         ]
       },
       downstream: {
@@ -280,7 +280,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: 'HBM과 GPU 칩셋을 최종 실리콘 인터포저 위에 얹어 하나로 패키지화하는 파운드리 공정.',
         instruments: [
-          { name: '티에스엠씨 (TSMC)', ticker: 'TSM', sector: 'HBM 패키징', fit: 92, overheat: 70, price: '$152.4', change: '+2.5%', volumeSignal: '외인 매집', analysis: '어드밴스드 CoWoS 패키징 설비 확대로 빅테크 칩셋 수주 장벽 독점.' }
+          { name: '티에스엠씨 (TSMC)', ticker: 'TSM', sector: 'AI 가속기 GPU', fit: 92, overheat: 70, price: '$154.2', change: '+2.5%', volumeSignal: '외인 매집', analysis: '어드밴스드 CoWoS 패키징 설비 확대로 빅테크 칩셋 수주 장벽 독점.' }
         ]
       }
     },
@@ -299,7 +299,7 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: '에칭 홀을 안정적으로 미세 에칭할 수 있게 고안된 특수 성분의 플랫 글래스 원천 기술.',
         instruments: [
-          { name: 'SKC', ticker: '011790', sector: '차세대 유리 기판', fit: 82, overheat: 69, price: '138,500원', change: '+4.5%', volumeSignal: '기관 매집', analysis: '유리기판 자회사 앱솔릭스의 미국 현지 최초 승인 및 상업 가동 기대.' }
+          { name: 'SKC', ticker: '011790', sector: '차세대 유리 기판', fit: 82, overheat: 69, price: '142,500원', change: '+4.5%', volumeSignal: '기관 매집', analysis: '유리기판 자회사 앱솔릭스의 미국 현지 최초 승인 및 상업 가동 기대.' }
         ]
       },
       midstream: {
@@ -308,7 +308,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '유리에 에칭 홀을 뚫고 구리를 도금하여 미세 반도체 기판으로 완성하는 공정.',
         instruments: [
-          { name: '삼성전기', ticker: '009150', sector: '차세대 유리 기판', fit: 76, overheat: 58, price: '152,000원', change: '+1.3%', volumeSignal: '외인 순매수', analysis: '2026년 조기 유리기판 양산 목표 제시. MLCC 시황 개선과 연동.' }
+          { name: '삼성전기', ticker: '009150', sector: '차세대 유리 기판', fit: 76, overheat: 58, price: '158,000원', change: '+1.3%', volumeSignal: '외인 순매수', analysis: '2026년 조기 유리기판 양산 목표 제시. MLCC 시황 개선과 연동.' }
         ]
       },
       downstream: {
@@ -317,7 +317,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '차세대 AI GPU 혹은 커스텀 전력 가속기에 장착되어 기판 스케일을 키우는 인프라.',
         instruments: [
-          { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: '차세대 유리 기판', fit: 95, overheat: 85, price: '$120.5', change: '+4.1%', volumeSignal: '역대급 대금', analysis: '인텔/AMD 등과 기판 변환 연합 형성. 향후 블랙웰 차차세대 적용 기대.' }
+          { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: 'AI 가속기 GPU', fit: 95, overheat: 85, price: '$121.2', change: '+4.1%', volumeSignal: '역대급 대금', analysis: '인텔/AMD 등과 기판 변환 연합 형성. 향후 블랙웰 차차세대 적용 기대.' }
         ]
       }
     },
@@ -336,7 +336,7 @@ const CANVASES_DATA = {
         x: 70, y: 250, w: 220, h: 60,
         description: 'ESS 안전성을 확보해주는 고수명 리튬인산철(LFP) 및 삼원계 배터리 셀.',
         instruments: [
-          { name: '서진시스템', ticker: '178320', sector: '대용량 ESS 저장', fit: 84, overheat: 72, price: '29,450원', change: '+5.3%', volumeSignal: '외인 매수 우위', analysis: 'ESS 완성품 컨테이너형 조립 조달의 중심 공급사. 실적 퀀텀점프 진행 중.' }
+          { name: '서진시스템', ticker: '178320', sector: 'ESS & 스타링크', fit: 84, overheat: 72, price: '29,450원', change: '+5.3%', volumeSignal: '외인 매수 우위', analysis: 'ESS 완성품 컨테이너형 조립 조달의 중심 공급사. 실적 퀀텀점프 진행 중.' }
         ]
       },
       midstream: {
@@ -345,7 +345,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: '직류 배터리를 교류 전력망과 연동시켜주는 변환 인버터(PCS) 및 온도 조절 캐비닛.',
         instruments: [
-          { name: 'LS전선', ticker: '006260', sector: '대용량 ESS 저장', fit: 85, overheat: 72, price: '124,500원', change: '+5.1%', volumeSignal: '외인/기관 양매수', analysis: '대용량 ESS 연동에 쓰이는 초고압 버스덕트 및 케이블 연결부 수주.' }
+          { name: 'LS전선', ticker: '006260', sector: '구리/케이블', fit: 85, overheat: 72, price: '128,500원', change: '+5.1%', volumeSignal: '외인/기관 양매수', analysis: '대용량 ESS 연동에 쓰이는 초고압 버스덕트 및 케이블 연결부 수주.' }
         ]
       },
       downstream: {
@@ -354,7 +354,7 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '테슬라 메가팩 등 초대형 배터리 컨테이너를 설치해 상업 전기 송배전 효율을 맞추는 사업자.',
         instruments: [
-          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '대용량 ESS 저장', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 매수', analysis: '기가 네바다 및 라스롭 메가팩 공장 증설 가동. 에너지 매출 고성장세 진입.' }
+          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: 'ESS & 스타링크', fit: 90, overheat: 58, price: '$176.5', change: '+3.2%', volumeSignal: '기관 매수', analysis: '기가 네바다 및 라스롭 메가팩 공장 증설 가동. 에너지 매출 고성장세 진입.' }
         ]
       }
     },
@@ -364,34 +364,34 @@ const CANVASES_DATA = {
     ]
   },
   starlink: {
-    title: '📡 9. 위성 스타링크 통신',
-    description: '지구 저궤도에 다량의 소형 인공위성을 배치하여 지상 국경 제한 없이 다이렉트 위성 데이터 통신을 공급하는 우주 인터넷망.',
+    title: '📡 9. 우주 인터넷 & 위성 통신',
+    description: '저궤도 인공위성 통신망을 활용해 지상의 경계 제한 없이 초고속 인터넷을 공급하는 우주 정보 그리드 인프라.',
     nodes: {
       upstream: {
         id: 'upstream',
-        name: '부품: 위성 RF 소자 및 안테나',
+        name: '부품: 안테나 소자 & 단말용 RF',
         x: 70, y: 250, w: 220, h: 60,
-        description: '지상 위성 수신 단말기용 평판 위성 안테나 및 송수신 RF 회로 설계.',
+        description: '위성 신호를 수신해 지상 네트워크로 통신 변환하는 평판형 소형 안테나 및 위성 칩.',
         instruments: [
-          { name: '풍산', ticker: '103140', sector: '위성 스타링크 통신', fit: 80, overheat: 68, price: '64,200원', change: '+3.5%', volumeSignal: '거래 급증', analysis: '우주/방산용 구리 합금 소재 및 관련 정밀 도금 핀 공급망 형성.' }
+          { name: '인텔리안테크', ticker: '189300', sector: '위성 통신', fit: 82, overheat: 60, price: '58,400원', change: '+2.1%', volumeSignal: '기관 매수', analysis: '저궤도 위성 통신 안테나 글로벌 주력 납품처. 원웹 파트너십 구축.' }
         ]
       },
       midstream: {
         id: 'midstream',
-        name: '제조: 저궤도 통신 위성 및 발사체',
+        name: '위성/발사: 저궤도 위성 군집 조달',
         x: 390, y: 250, w: 220, h: 60,
-        description: 'SpaceX 팰컨9을 통해 궤도에 수시로 안착되는 초경량 통신 위성 제조망.',
+        description: '저궤도로 수천 개의 군집 위성을 쏘아 올리고 이를 우주 궤도 상에서 제어하는 운용 기술.',
         instruments: [
-          { name: '스페이스X (SpaceX 비상장)', ticker: 'SPACE.X', sector: '위성 스타링크 통신', fit: 80, overheat: 50, price: '비상장', change: '0.0%', volumeSignal: '장외 거래 활발', analysis: '저궤도 위성 통신 부문 세계 최고 수준 발사 횟수 및 비용 경쟁력 독점.' }
+          { name: '스페이스X (SpaceX 비상장)', ticker: 'SPACE.X', sector: '위성 통신', fit: 80, overheat: 50, price: '비상장', change: '0.0%', volumeSignal: '장외 거래', analysis: '팰컨9을 활용한 위성 대량 배치 독점. 상업용 우주 통신망 최고 지배력.' }
         ]
       },
       downstream: {
         id: 'downstream',
-        name: '수요: 차량/해상/데이터센터 위성 연결',
+        name: '단말/수요: 커넥티드 차량 & 방산 통신',
         x: 710, y: 250, w: 220, h: 60,
-        description: '자율주행 차량 지연율 보완, 선박 통신 및 오지 원격 기지국의 실시간 위성 통신 조달.',
+        description: '우주 네트워크 연결 단말을 부착해 자율주행 데이터 백업 및 특수 기지에 통신을 공급하는 최종 형태.',
         instruments: [
-          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '위성 스타링크 통신', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 우위', analysis: '테슬라 사이버트럭 및 차세대 보급형 차량 스타링크 수신기 탑재 로드맵 구체화.' }
+          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: 'ESS & 스타링크', fit: 90, overheat: 58, price: '$176.5', change: '+3.2%', volumeSignal: '기관 우위', analysis: '차세대 차량 단말에 스타링크 지상 안테나 연동 탑재로 글로벌 전역 음영 제거.' }
         ]
       }
     },
@@ -401,35 +401,35 @@ const CANVASES_DATA = {
     ]
   },
   robot: {
-    id: 'robot',
-    title: '🤖 10. 휴머노이드 로봇',
-    description: '인간의 움직임을 모사하여 생산 공장 및 생활 공간 노동을 보조하는 자율 물리 인공지능 로봇 조립망.',
+    title: '🤖 10. 미래 로봇 & 자동화',
+    description: '공장 자동화 및 스마트 팩토리, 인간의 모션을 완전 모사하는 차세대 지능형 서비스 로봇 생태계.',
     nodes: {
       upstream: {
         id: 'upstream',
         name: '부품: 하모닉 감속기 & 액추에이터',
         x: 70, y: 250, w: 220, h: 60,
-        description: '정밀 제어 모터의 토크를 조절해 로봇의 손가락 및 팔다리 관절을 구동하는 핵심 부품.',
+        description: '관절 움직임을 제어하고 소형 모터 토크를 배가시키는 정밀 기어 및 감속 소자.',
         instruments: [
-          { name: '에스비비테크', ticker: '389500', sector: '휴머노이드 로봇', fit: 78, overheat: 58, price: '28,200원', change: '+1.5%', volumeSignal: '개인 유입', analysis: '로봇용 하모닉 드라이브 감속기 특허 및 라인업 보유에 따른 모멘텀.' }
+          { name: '에스비비테크', ticker: '389500', sector: '로봇 & 자동화', fit: 78, overheat: 58, price: '28,200원', change: '+1.5%', volumeSignal: '개인 유입', analysis: '로봇 관절 정밀 감속기 국내 최초 국산화 특허 및 상용 생산 라인 가동.' }
         ]
       },
       midstream: {
         id: 'midstream',
-        name: '조립/제어: 통합 휴머노이드 설계',
+        name: '제조: 협동로봇 & 스마트팩토리 조립',
         x: 390, y: 250, w: 220, h: 60,
-        description: '모터, 프레임, 임베디드 컴퓨터를 하우징하여 휴머노이드 골격을 완성하고 모션을 제어하는 공정.',
+        description: '공정 효율화를 돕는 조립 관절형 협동로봇 완제품 및 산업용 로봇 바디 프레임.',
         instruments: [
-          { name: '레인보우로보틱스', ticker: '277810', sector: '휴머노이드 로봇', fit: 86, overheat: 64, price: '168,500원', change: '+2.8%', volumeSignal: '기관 순매수', analysis: '삼성전자 스마트팩토리 현장 투입용 로봇 관절 및 구동 솔루션 구축 최선두.' }
+          { name: '두산로보틱스', ticker: '454910', sector: '로봇 & 자동화', fit: 85, overheat: 68, price: '82,400원', change: '+2.5%', volumeSignal: '기관 순매수', analysis: '유럽/북미 협동 로봇 시장 성장에 따른 채널 유통 및 외형 매출 증가.' },
+          { name: '레인보우로보틱스', ticker: '277810', sector: '로봇 & 자동화', fit: 86, overheat: 64, price: '168,500원', change: '+2.8%', volumeSignal: '기관 매집', analysis: '삼성전자 스마트팩토리 자동화 라인용 로봇 기술 로드맵 직결 독점 수혜.' }
         ]
       },
       downstream: {
         id: 'downstream',
-        name: '인텔리전스: 물리 AI 모델 & 시각 신경망',
+        name: '지능: 자율주행 및 물리 비전 AI',
         x: 710, y: 250, w: 220, h: 60,
-        description: '로봇이 세상을 인지하고 스스로 행동할 수 있게 만들어주는 비전 카메라와 학습 알고리즘.',
+        description: '로봇이 사물을 인지하고 경로를 탐색해 실제 작업을 조력하는 AI 인지 모델.',
         instruments: [
-          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '휴머노이드 로봇', fit: 90, overheat: 58, price: '$178.4', change: '+3.2%', volumeSignal: '기관 매수', analysis: '차세대 옵티머스 Gen2 휴머노이드 로봇의 테슬라 기가팩토리 실배치 모니터링 가속화.' }
+          { name: '테슬라 (Tesla)', ticker: 'TSLA', sector: '머스크 유니버스', fit: 90, overheat: 58, price: '$176.5', change: '+3.2%', volumeSignal: '기관 매수', analysis: '자체 옵티머스 휴머노이드 로봇의 하드웨어 제조 및 공장 가동 실배치 모멘텀.' }
         ]
       }
     },
@@ -457,7 +457,7 @@ const CANVASES_DATA = {
         x: 390, y: 250, w: 220, h: 60,
         description: 'AI가 디자인한 단백질을 실제 합성하여 효능 및 표적 부합도를 임상적으로 판별하는 실증 공정.',
         instruments: [
-          { name: '삼성전자', ticker: '005930', sector: 'Bio-AI & 합성생물학', fit: 75, overheat: 50, price: '72,400원', change: '+0.8%', volumeSignal: '개인 유입', analysis: '자회사 바이오로직스의 AI 기반 맞춤형 항체/바이오 시밀러 대량 조달 연계성.' }
+          { name: '삼성전자', ticker: '005930', sector: 'HBM 패키징', fit: 75, overheat: 50, price: '77,400원', change: '+0.8%', volumeSignal: '개인 유입', analysis: '바이오 계열사 연동 차세대 정밀 단백질 의약품 CMO 조달 잠재성.' }
         ]
       },
       downstream: {
@@ -466,7 +466,45 @@ const CANVASES_DATA = {
         x: 710, y: 250, w: 220, h: 60,
         description: '도출된 후보물질을 매집하여 글로벌 3상 임상을 거쳐 시판하는 글로벌 대형 제약 유통망.',
         instruments: [
-          { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: 'Bio-AI & 합성생물학', fit: 95, overheat: 85, price: '$120.5', change: '+4.1%', volumeSignal: '역대급 대금', analysis: 'AI 신약 설계 플랫폼 에보젠(BioNeMo) 생태계를 확장하여 바이오 인프라를 공급.' }
+          { name: '엔비디아 (NVIDIA)', ticker: 'NVDA', sector: 'AI 가속기 GPU', fit: 95, overheat: 85, price: '$121.2', change: '+4.1%', volumeSignal: '역대급 대금', analysis: 'AI 신약 설계 플랫폼 에보젠(BioNeMo) 생태계를 확장하여 바이오 인프라를 공급.' }
+        ]
+      }
+    },
+    edges: [
+      { from: 'upstream', to: 'midstream' },
+      { from: 'midstream', to: 'downstream' }
+    ]
+  },
+  quantum: {
+    title: '⚛️ 12. 양자 컴퓨팅 (Quantum Computing)',
+    description: '기존 슈퍼컴퓨터로 수만 년이 걸리는 암호 해독 및 신약 분자 설계 최적화 문제를 수분 내에 해결하는 미래 양자 소자 연산 기법.',
+    nodes: {
+      upstream: {
+        id: 'upstream',
+        name: '소재/소자: 초저온 희석냉동기 & 양자 큐비트',
+        x: 70, y: 250, w: 220, h: 60,
+        description: '절대 영도(0.015K) 근처의 환경을 제공하는 냉동 제어 장치 및 양자 소자 큐비트 챔버.',
+        instruments: [
+          { name: '아이온큐 (IonQ)', ticker: 'IONQ', sector: '양자 컴퓨팅', fit: 82, overheat: 60, price: '$9.8', change: '+5.4%', volumeSignal: '개인 수급 급증', analysis: '이온 트랩 방식 양자 컴퓨터 개발사. 에러율 감소 및 상용 양자 칩셋 가치 최선두.' },
+          { name: '리지티 (Rigetti)', ticker: 'RGTI', sector: '양자 컴퓨팅', fit: 70, overheat: 54, price: '$1.45', change: '+2.1%', volumeSignal: '변동성 확대', analysis: '초전도 큐비트 양자 반도체 및 하이브리드 연산 전력 모듈 실증 중.' }
+        ]
+      },
+      midstream: {
+        id: 'midstream',
+        name: '연산: 양자 연산 가속 칩셋 (QPU)',
+        x: 390, y: 250, w: 220, h: 60,
+        description: '양자 결맞음 상태를 정밀 제어하여 연산 게이트를 수행하는 실리콘 양자 연산 코어.',
+        instruments: [
+          { name: '아이비엠 (IBM)', ticker: 'IBM', sector: '양자 컴퓨팅', fit: 86, overheat: 62, price: '$172.5', change: '+1.1%', volumeSignal: '안정적 연기금', analysis: '1,000큐비트 칩 론칭 완료. 상용 클라우드 양자 구독 서비스 세계 1위 점유.' }
+        ]
+      },
+      downstream: {
+        id: 'downstream',
+        name: '소프트웨어: 양자 최적화 알고리즘 & 보안',
+        x: 710, y: 250, w: 220, h: 60,
+        description: '양자 어닐링 기법을 활용해 복잡한 최적화 알고리즘 소프트웨어와 내성 암호 보안 기술을 조율하는 단.',
+        instruments: [
+          { name: '디웨이브 시스템즈 (D-Wave)', ticker: 'QBTS', sector: '양자 컴퓨팅', fit: 74, overheat: 58, price: '$1.82', change: '+3.5%', volumeSignal: '개인 매입', analysis: '상업용 양자 어닐러 공급. 물류/금융 포트폴리오 최적화 연산 실증 적용.' }
         ]
       }
     },
@@ -490,8 +528,6 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
 
   const activeCanvas = CANVASES_DATA[selectedSector] || CANVASES_DATA.tesla_universe;
   const nodesList = Object.values(activeCanvas.nodes);
-  
-  // 현재 선택된 노드의 상세 정보 및 종목 카드
   const selectedNode = activeCanvas.nodes[selectedNodeId] || nodesList[0];
 
   const handleMouseDown = (e) => {
@@ -521,7 +557,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
 
   const handleSelectSector = (sectorKey) => {
     setSelectedSector(sectorKey);
-    setSelectedNodeId(null); // 섹터 교체 시 노드 선택 초기화
+    setSelectedNodeId(null);
     setZoom(1);
     setPan({ x: 0, y: 0 });
   };
@@ -533,7 +569,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Network size={20} className="text-accent" style={{ color: 'var(--accent-light)' }} />
-            <span>KMC 11대 독립 유망 밸류체인 캔버스</span>
+            <span>KMC 12대 독립 미래혁신 밸류체인 캔버스</span>
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
             {activeCanvas.description}
@@ -557,7 +593,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
         </div>
       </div>
 
-      {/* 11대 독립 밸류체인 셀렉터 단추 리스트 (피드백 반영) */}
+      {/* 12대 독립 밸류체인 셀렉터 단추 리스트 (양자컴퓨팅 추가) */}
       <div className="canvas-selector" style={{ flexWrap: 'wrap', gap: '6px', marginBottom: '16px', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '10px', border: '1px solid var(--border)' }}>
         <button className={`canvas-sel-btn ${selectedSector === 'tesla_universe' ? 'active' : ''}`} onClick={() => handleSelectSector('tesla_universe')}>👑 머스크 유니버스</button>
         <button className={`canvas-sel-btn ${selectedSector === 'arch48v' ? 'active' : ''}`} onClick={() => handleSelectSector('arch48v')}>🔌 1. 48V 아키텍처</button>
@@ -568,9 +604,10 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
         <button className={`canvas-sel-btn ${selectedSector === 'hbm' ? 'active' : ''}`} onClick={() => handleSelectSector('hbm')}>💾 6. HBM 패키징</button>
         <button className={`canvas-sel-btn ${selectedSector === 'glass' ? 'active' : ''}`} onClick={() => handleSelectSector('glass')}>🔬 7. 유리 기판</button>
         <button className={`canvas-sel-btn ${selectedSector === 'ess' ? 'active' : ''}`} onClick={() => handleSelectSector('ess')}>🔋 8. 대용량 ESS</button>
-        <button className={`canvas-sel-btn ${selectedSector === 'starlink' ? 'active' : ''}`} onClick={() => handleSelectSector('starlink')}>📡 9. 스타링크 통신</button>
-        <button className={`canvas-sel-btn ${selectedSector === 'robot' ? 'active' : ''}`} onClick={() => handleSelectSector('robot')}>🤖 10. 휴머노이드 로봇</button>
+        <button className={`canvas-sel-btn ${selectedSector === 'starlink' ? 'active' : ''}`} onClick={() => handleSelectSector('starlink')}>📡 9. 우주 인터넷</button>
+        <button className={`canvas-sel-btn ${selectedSector === 'robot' ? 'active' : ''}`} onClick={() => handleSelectSector('robot')}>🤖 10. 미래 로봇</button>
         <button className={`canvas-sel-btn ${selectedSector === 'bio_ai' ? 'active' : ''}`} onClick={() => handleSelectSector('bio_ai')}>🧪 11. Bio-AI</button>
+        <button className={`canvas-sel-btn ${selectedSector === 'quantum' ? 'active' : ''}`} onClick={() => handleSelectSector('quantum')} style={{ border: '1px solid rgba(16, 185, 129, 0.4)' }}>⚛️ 12. 양자 컴퓨팅</button>
       </div>
 
       {/* 줌 & 팬 뷰포트 영역 */}
@@ -583,7 +620,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
         style={{
           cursor: isDragging ? 'grabbing' : 'grab',
           position: 'relative',
-          height: '450px',
+          height: '420px',
           overflow: 'hidden'
         }}
       >
@@ -594,10 +631,10 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
             transformOrigin: 'center center',
             transition: isDragging ? 'none' : 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
             width: '1000px',
-            height: '450px',
+            height: '420px',
             position: 'absolute',
             left: 'calc(50% - 500px)',
-            top: 'calc(50% - 225px)'
+            top: 'calc(50% - 210px)'
           }}
         >
           {/* 절대좌표 SVG 레이어 - 섹터별 엣지 라인 동적 렌더링 */}
@@ -607,13 +644,11 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
                 <path d="M 0 2 L 10 5 L 0 8 z" fill="rgba(139, 92, 246, 0.35)" />
               </marker>
             </defs>
-            {/* activeCanvas.edges 동적 SVG 그리기 */}
             {activeCanvas.edges.map((edge, index) => {
               const fromNode = activeCanvas.nodes[edge.from];
               const toNode = activeCanvas.nodes[edge.to];
               if (!fromNode || !toNode) return null;
               
-              // 노드 중심 좌표 계산
               const x1 = fromNode.x + fromNode.w / 2;
               const y1 = fromNode.y + fromNode.h / 2;
               const x2 = toNode.x + toNode.w / 2;
