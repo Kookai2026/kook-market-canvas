@@ -22,17 +22,17 @@ export default function TaehaPortfolio() {
   const [formPrice, setFormPrice] = useState('');
   const [formQty, setFormQty] = useState('');
 
-  // 비밀번호 검증 (0604 또는 1234)
+  // 비밀번호 검증 (0225로 변경 - 피드백 반영)
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === '0604' || password === '1234') {
+    if (password === '0225') {
       setIsAuthenticated(true);
       setErrorMsg('');
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('portfolio_auth', 'true');
       }
     } else {
-      setErrorMsg('비밀번호가 올바르지 않습니다. (힌트: 사령관님 패밀리만의 암호)');
+      setErrorMsg('비밀번호가 올바르지 않습니다. (힌트: 사령관님 부부만의 기념일 암호 4자리)');
     }
   };
 
