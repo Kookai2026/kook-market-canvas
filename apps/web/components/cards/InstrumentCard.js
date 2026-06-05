@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { 
   Star, Activity, ArrowUpRight, AlertTriangle, 
-  LineChart, ExternalLink, HelpCircle, Calendar, Link2 
+  LineChart, ExternalLink, HelpCircle, Calendar
 } from 'lucide-react';
 
 export default function InstrumentCard({ instrument, isFavorite, onToggleFavorite }) {
@@ -40,7 +40,7 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
     }
   };
 
-  // 달인들의 기술적 시그널 매칭 (Mock)
+  // 샘플 기술적 시그널 매칭. 실제 운영에서는 수집 파이프라인 결과로 교체한다.
   const getTechnicalSignals = (tick) => {
     // 종목별 보조지표 매칭
     const signals = {
@@ -52,7 +52,11 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
       '005490': ['RSI 28 극단적 과매도', '이평선 역배열 반등 준비'],
       'ETN': ['120일선 장기 지지 성공', 'RSI 45 정상'],
       'VRT': ['정배열 상단 돌파', '볼린저밴드 상단 터치'],
-      'CEG': ['5일선 우상향 정배열', 'MACD 데드크로스 경계']
+      'CEG': ['5일선 우상향 정배열', 'MACD 데드크로스 경계'],
+      'DJT': ['RSI 72 과열 진입', '초고변동성 주의', '5일선 이격 발생'],
+      'XOM': ['200일선 장기 지지선 반등', '정배열 수렴 완료', '배당 매력도 우수'],
+      'LMT': ['120일선 정배열 우상향', 'RSI 52 정상', '기관 매수 유입'],
+      'TSLA': ['RSI 65 과열 경계', '볼린저 밴드 상단', '120일선 지지 돌파']
     };
     return signals[tick] || ['RSI 40~55 정상 구간', '이평선 수렴 대기'];
   };
@@ -157,7 +161,7 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
             - Valuation (25%): 밸류에이션 저평가 매력도<br />
             - Flow (20%): 메이저 세력(외인/기관) 매집량<br />
             - Technical (15%): 이평선 정배열 및 모멘텀<br />
-            - Catalyst (10%): 일론 머스크/xAI 직접 수혜 연동성
+            - Catalyst (10%): 검증된 구조적 촉매 및 공식 관계
           </div>
         )}
 
@@ -183,7 +187,7 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
       {/* 달인들의 보조지표 포착 배지 (피드백 5 반영) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>
-          달인의 매수/매도 기법 매칭
+          샘플 기술 신호
         </span>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
           {techSignals.map((sig, i) => (
@@ -198,13 +202,13 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
                 border: sig.includes('과매도') ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid var(--border)'
               }}
             >
-              🎯 {sig}
+              {sig}
             </span>
           ))}
         </div>
       </div>
 
-      {/* TradingView 실시간 차트 위젯 (피드백 3 반영) */}
+      {/* TradingView 외부 차트 위젯 */}
       {showChart && (
         <div style={{ height: '220px', width: '100%', background: '#12141a', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
           <iframe
@@ -218,7 +222,11 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
       <div className="card-footer" style={{ gap: '10px' }}>
         <div className="footer-item">
           <Activity size={12} className="text-accent" style={{ color: 'var(--accent-light)' }} />
-          <span>수급 신호: {volumeSignal}</span>
+          <span>샘플 수급 신호: {volumeSignal}</span>
+        </div>
+        <div className="footer-item" style={{ color: 'var(--warning)' }}>
+          <AlertTriangle size={12} />
+          <span>가격/점수는 샘플 리서치 데이터입니다.</span>
         </div>
         <div className="inst-analysis">
           {overheat >= 80 && <AlertTriangle size={12} style={{ color: 'var(--danger)', verticalAlign: 'middle', marginRight: '4px', display: 'inline' }} />}

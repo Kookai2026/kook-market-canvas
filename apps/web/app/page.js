@@ -2,15 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  FileText, Star, Activity, Sparkles, CheckCircle2, 
-  TrendingUp, Compass, User, ExternalLink, Network, Layers, ShieldCheck, Home as HomeIcon,
-  BookOpen, CheckSquare
+  FileText, Star, User, Network, Layers, ShieldCheck, BookOpen, CheckSquare, Flag
 } from 'lucide-react';
 
 import SignalFeed from '../components/news/SignalFeed';
-import FavoriteList, { STOCKS_POOL } from '../components/favorites/FavoriteList';
+import FavoriteList from '../components/favorites/FavoriteList';
 import ValueChainCanvas from '../components/canvas/ValueChainCanvas';
 import MuskStackTab from '../components/cards/MuskStackTab';
+import TrumpStackTab from '../components/cards/TrumpStackTab';
 
 import PrinciplesTab from '../components/principles/PrinciplesTab';
 import DailyCheckTab from '../components/check/DailyCheckTab';
@@ -21,7 +20,6 @@ export default function Home() {
   const [favorites, setFavorites] = useState(['267260', 'NVDA']); // 기본 즐겨찾기 종목
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [simulatedTime, setSimulatedTime] = useState('');
 
   // 로컬스토리지에서 즐겨찾기 복원
   useEffect(() => {
@@ -34,17 +32,6 @@ export default function Home() {
         console.error(e);
       }
     }
-  }, []);
-
-  // 10초 단위 대시보드 가상 시세 동기화 시각 업데이트
-  useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      setSimulatedTime(now.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
-    };
-    update();
-    const interval = setInterval(update, 10000);
-    return () => clearInterval(interval);
   }, []);
 
   const toggleFavorite = (ticker) => {
@@ -141,6 +128,13 @@ export default function Home() {
           <span>Musk Stack 검증</span>
         </button>
         <button 
+          className={`tab-btn ${activeTab === 'trump' ? 'active' : ''}`}
+          onClick={() => setActiveTab('trump')}
+        >
+          <Flag size={16} />
+          <span>Trump Stack 검증</span>
+        </button>
+        <button 
           className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
           onClick={() => setActiveTab('favorites')}
         >
@@ -179,9 +173,16 @@ export default function Home() {
         />
       )}
 
+      {activeTab === 'trump' && (
+        <TrumpStackTab 
+          favorites={favorites} 
+          onToggleFavorite={toggleFavorite} 
+        />
+      )}
+
       {activeTab === 'favorites' && (
         <div className="main-grid">
-          {/* 좌측: 실시간 뉴스 및 시그널 피드 */}
+          {/* 좌측: 뉴스 및 시그널 피드 */}
           <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <SignalFeed />
           </section>
