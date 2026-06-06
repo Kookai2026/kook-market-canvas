@@ -72,7 +72,7 @@ erDiagram
   - `link_id` (UUID, PK, Default: gen_random_uuid())
   - `node_id` (UUID, FK -> `kmc_nodes.node_id` ON DELETE CASCADE)
   - `instrument_id` (UUID, FK -> `kmc_instruments.instrument_id` ON DELETE CASCADE)
-  - `relation_role` (VARCHAR): `direct_supplier` (직접 수혜), `indirect_partner` (간접 공급), `etf_exposure` (지수 노출)
+  - `relation_role` (VARCHAR): `direct_supplier` (직접 공급), `indirect_partner` (간접 공급), `etf_exposure` (지수 노출)
 
 ### 6. `kmc_metric_snapshots` (종목 기술/수급 데이터 스냅샷)
 - **설명**: 사내 수집기에서 긁어와 갱신하는 핫 가격/수급 데이터.

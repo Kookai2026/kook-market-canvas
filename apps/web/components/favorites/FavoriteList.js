@@ -115,4 +115,3 @@ export default function FavoriteList({ favorites, onToggleFavorite }) {
     </div>
   );
 }
-export { STOCKS_POOL };

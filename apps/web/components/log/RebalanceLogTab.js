@@ -1,18 +1,18 @@
 'use client';
 
-import { FileText, Calendar, ArrowRight, GitCommit, ShieldAlert, Award } from 'lucide-react';
+import { Calendar, ArrowRight } from 'lucide-react';
 
 const LOGS = [
   {
     date: '2026-06-04',
-    title: '6월 정기 포트폴리오 비중 검수 및 패스워드 개편',
+    title: '6월 공개 앱 보안 및 검증 문구 정리',
     author: 'KMC System Operator',
     type: '보안 및 구조 조정',
     actions: [
       { sector: 'Musk Stack', change: 'A등급 직접 계약 필터 강화 및 일부 C등급 강등', reason: 'HD현대일렉트릭 xAI 공급 미검증 소식 반영' },
-      { sector: '태하 하우스 탭', change: '메인 탭 노출 제거 및 암호화 게이트 격리', reason: '퍼블릭 출시 리스크 방지 및 보안 등급 상승' }
+      { sector: '개인 포트폴리오', change: '공개 앱 노출 제거 및 샘플 관심 종목 기능만 유지', reason: '퍼블릭 출시 리스크 방지 및 보안 등급 상승' }
     ],
-    details: '투자 리서치 대시보드에서 5년 장기투자 원칙 랜딩으로 첫 화면을 전환하고, 불필요한 시세 동요를 차단하기 위해 7초 주가 시뮬레이션에 데모 알림 배지를 탑재하였습니다.'
+    details: '투자 리서치 대시보드에서 5년 장기투자 원칙 랜딩으로 첫 화면을 전환하고, 검증 전 데이터는 샘플 리서치 데이터로 표시하도록 정리하였습니다.'
   },
   {
     date: '2026-05-20',

@@ -198,7 +198,7 @@ sector_slug: ai-electrification
 node_id: node-hv-transformer
 title: 초고압 변압기
 node_type: component
-thesis: "AI 데이터센터와 노후 전력망 교체 CAPEX의 직접 수혜 노드"
+thesis: "AI 데이터센터와 노후 전력망 교체 CAPEX의 구조적 수혜 노드"
 risks:
   - "원자재 가격 상승"
   - "설비 증설 지연"

@@ -40,7 +40,7 @@ graph TD
     end
 
     subgraph External_Network ["외부 사외망 (Public Internet)"]
-        User["사령관 및 가족 (스마트폰, 사외 PC)"]
+        User["KMC 사용자 (스마트폰, 사외 PC)"]
     end
 
     %% 데이터 흐름 및 보안 장벽
@@ -75,7 +75,7 @@ graph TD
   * 빌드 및 배포가 GitHub main 브랜치 푸시와 유기적으로 연동되어 있습니다.
 
 ### 3) 외부 클라이언트 (Public Client)
-* **사령관 및 가족 웹 브라우저**: Tailscale VPN을 켜거나 복잡한 인증 절차를 거치지 않고, 퍼블릭 Vercel 배포 주소로 직접 진입하여 실시간 고속 투자 정보를 브라우징합니다.
+* **KMC 사용자 웹 브라우저**: Tailscale VPN을 켜거나 복잡한 인증 절차를 거치지 않고, 퍼블릭 Vercel 배포 주소로 직접 진입하여 최신 투자 리서치 데이터를 브라우징합니다.
 
 ---
 
@@ -103,7 +103,7 @@ sequenceDiagram
     
     Note over vercel, client: 3단계: 외부 접속 및 화면 표시
     client->>vercel: https://kook-market-canvas.vercel.app 접속 요청
-    vercel->>supabase: Supabase JS Client로 실시간 종목 및 캔버스 쿼리
+    vercel->>supabase: Supabase JS Client로 최신 종목 및 캔버스 쿼리
     supabase-->>vercel: 최신 JSON 데이터 반환
     vercel-->>client: 하이드레이션 완료된 고품격 마켓 캔버스 화면 렌더링
 ```

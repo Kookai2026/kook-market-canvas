@@ -1,19 +1,42 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { 
   FileText, Star, User, Network, Layers, ShieldCheck, BookOpen, CheckSquare, Flag
 } from 'lucide-react';
 
-import SignalFeed from '../components/news/SignalFeed';
-import FavoriteList from '../components/favorites/FavoriteList';
-import ValueChainCanvas from '../components/canvas/ValueChainCanvas';
-import MuskStackTab from '../components/cards/MuskStackTab';
-import TrumpStackTab from '../components/cards/TrumpStackTab';
-
 import PrinciplesTab from '../components/principles/PrinciplesTab';
-import DailyCheckTab from '../components/check/DailyCheckTab';
-import RebalanceLogTab from '../components/log/RebalanceLogTab';
+
+const DailyCheckTab = dynamic(() => import('../components/check/DailyCheckTab'), {
+  loading: () => <LoadingPanel label="오늘의 점검 로드 중..." />
+});
+const ValueChainCanvas = dynamic(() => import('../components/canvas/ValueChainCanvas'), {
+  loading: () => <LoadingPanel label="밸류체인 캔버스 로드 중..." />
+});
+const MuskStackTab = dynamic(() => import('../components/cards/MuskStackTab'), {
+  loading: () => <LoadingPanel label="Musk Stack 검증 로드 중..." />
+});
+const TrumpStackTab = dynamic(() => import('../components/cards/TrumpStackTab'), {
+  loading: () => <LoadingPanel label="정책 리스크 샘플 로드 중..." />
+});
+const SignalFeed = dynamic(() => import('../components/news/SignalFeed'), {
+  loading: () => <LoadingPanel label="시그널 피드 로드 중..." />
+});
+const FavoriteList = dynamic(() => import('../components/favorites/FavoriteList'), {
+  loading: () => <LoadingPanel label="관심 종목 로드 중..." />
+});
+const RebalanceLogTab = dynamic(() => import('../components/log/RebalanceLogTab'), {
+  loading: () => <LoadingPanel label="리밸런싱 로그 로드 중..." />
+});
+
+function LoadingPanel({ label }) {
+  return (
+    <div className="panel" style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+      {label}
+    </div>
+  );
+}
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('principles'); // 기본 첫 랜딩화면을 '5년 투자 원칙'으로 설정
@@ -132,7 +155,7 @@ export default function Home() {
           onClick={() => setActiveTab('trump')}
         >
           <Flag size={16} />
-          <span>Trump Stack 검증</span>
+          <span>정책 리스크 샘플</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}

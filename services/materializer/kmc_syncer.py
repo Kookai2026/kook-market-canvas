@@ -81,7 +81,7 @@ def load_local_mock_scores():
     ]
 
 def load_local_mock_metrics():
-    """사내 Hermes 수집기에서 처리한 실시간 가격 및 RSI 수급 모크 함수"""
+    """사내 Hermes 수집기에서 처리한 최신 가격 및 RSI 수급 모크 함수"""
     return [
         {
             "symbol": "267260",

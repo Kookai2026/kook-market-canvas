@@ -13,7 +13,7 @@
 [동기화 배치 클라이언트 (kmc_syncer.py)]
        |
        | ───> 1. POST /api/v1/sync/instruments (종목 마스터 갱신)
-       | ───> 2. POST /api/v1/sync/metrics (실시간 시세 및 기술지표 갱신)
+       | ───> 2. POST /api/v1/sync/metrics (최신 시세 및 기술지표 갱신)
        | ───> 3. POST /api/v1/sync/scores (적합도/과열도 스코어카드 갱신)
        | ───> 4. POST /api/v1/sync/canvas (섹터/노드/관계 캔버스 상태 갱신)
        v
@@ -50,7 +50,7 @@
 ```
 
 ### 2. 시세 및 기술지표 스냅샷 갱신 (`POST /api/v1/sync/metrics`)
-- **목적**: 사내 감시 데몬이 수집한 실시간 종목 가격 및 RSI 지표, 5일 외국인/기관 수급액을 일괄 갱신.
+- **목적**: 사내 감시 데몬이 수집한 최신 종목 가격 및 RSI 지표, 5일 외국인/기관 수급액을 일괄 갱신.
 - **페이로드**:
 ```json
 {

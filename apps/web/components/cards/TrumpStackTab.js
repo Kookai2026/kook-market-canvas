@@ -4,15 +4,15 @@ import { useState } from 'react';
 import { Flag, ExternalLink, Link2, HelpCircle, AlertTriangle, Calendar, Award } from 'lucide-react';
 import InstrumentCard from './InstrumentCard';
 
-// Trump Stack 관계 데이터
+// 정책 민감 섹터 샘플 데이터. 실제 운영에서는 공식 공시와 검증 워크플로를 통과한 항목만 노출한다.
 const TRUMP_STACK_DATA = [
   {
     id: 'djt_media',
-    subject: 'Trump Media & Technology Group ↔ Truth Social 직접 지분',
-    rank: 'A',
-    relationType: '직접 지분 소유 및 설립자 테마',
-    summary: '도널드 트럼프 대통령이 대주주로 있는 Truth Social의 모회사로, 정치적 모멘텀 및 당선 지지율과 100% 동조되어 움직이는 초고변동성 직접 수혜 자산.',
-    evidence: 'OGE 연례 공직자 자산 공개 보고서 (Form 278e) 직접 공시 내용 확인',
+    subject: 'Trump Media & Technology Group 정책 민감도',
+    rank: 'C',
+    relationType: '정책/인물 이벤트 민감 자산',
+    summary: '정치 이벤트와 여론 변화에 가격 변동성이 커질 수 있는 고위험 관찰 자산입니다.',
+    evidence: '공식 공시와 가격 변동성 자료를 별도 검증하기 전까지 샘플 관찰 항목으로만 분류',
     evidenceUrl: 'https://www.oge.gov',
     sourceType: '미 정부 공직자윤리국(OGE) 공식 연례 보고서',
     verifiedAt: '2026-06-05',
@@ -25,18 +25,18 @@ const TRUMP_STACK_DATA = [
       price: '$42.50',
       change: '+12.4%',
       volumeSignal: '소매/세력 수급 집중',
-      analysis: '기초 펀더멘탈 대비 정무적 촉매에 의해 가격이 결정되는 상징적 자산. 리스크 관리를 위해 포트폴리오 내 비중 극소량 제한 권장.'
+      analysis: '기초 펀더멘탈보다 이벤트성 변동이 클 수 있어 실제 편입 전 공식 공시, 유동성, 변동성 검증이 필요합니다.'
     }
   },
   {
     id: 'xom_energy',
-    subject: 'Exxon Mobil ↔ 친화석 연료 규제 완화 및 내각 매집',
-    rank: 'B',
-    relationType: '정책 수혜 및 공직자 다수 매매',
-    summary: '트럼프 정부의 에너지 자립 정책 및 연방토지 시추 규제 완화(Drill, Baby, Drill) 조치에 따른 전통 화석 연료 및 석유정제 최대 수혜주.',
-    evidence: 'TrumpTrades.com / Open Cabinet 의회 및 내각 거래 통계 분석 (Q1 관료 매집 Top 5 진입)',
-    evidenceUrl: 'https://trumpstrades.com',
-    sourceType: 'Open Cabinet 및 의원 거래 추적 데이터베이스',
+    subject: 'Exxon Mobil ↔ 에너지 정책 민감도',
+    rank: 'C',
+    relationType: '정책 변화 민감 섹터',
+    summary: '전통 에너지 섹터는 규제, 세제, 연방 토지 정책 변화에 영향을 받을 수 있는 관찰 대상입니다.',
+    evidence: '정책 변화와 섹터 실적의 연결은 공식 법안, 규정, 기업 공시 확인 후 판단',
+    evidenceUrl: 'https://corporate.exxonmobil.com',
+    sourceType: '기업 공시 및 정책 자료 확인 필요',
     verifiedAt: '2026-06-05',
     instrument: {
       name: 'Exxon Mobil Corp',
@@ -47,18 +47,18 @@ const TRUMP_STACK_DATA = [
       price: '$118.20',
       change: '+1.5%',
       volumeSignal: '외인/기관 동반 매수',
-      analysis: '규제 완화 수혜와 함께 고배당 성향 및 원자재 인플레이션 헷지 자산으로서 공화당 주요 관료들의 장기 보유 비중이 매우 높음.'
+      analysis: '정책 방향만으로 직접 관계를 단정하지 않고, 유가, 정제마진, CAPEX, 배당 지속성을 함께 검토해야 합니다.'
     }
   },
   {
     id: 'lmt_defense',
-    subject: 'Lockheed Martin ↔ 공화당 국방 예산 증액 및 안보 통제',
-    rank: 'B',
-    relationType: '국방부 관료 거래 및 방산 예산 수혜',
-    summary: '글로벌 안보 강화 정책 및 미국 우선주의 방위 분담금 재협상에 따른 미국 국방부 예산 증액 흐름. 국방 및 정보 당국 고위 공직자들의 꾸준한 매매 포착.',
-    evidence: 'Trump Tracker / ProPublica 상하원의원 및 안보보좌관 거래 공시 추적',
-    evidenceUrl: 'https://trumptracker.org',
-    sourceType: 'ProPublica 의회 거래 분석 데이터',
+    subject: 'Lockheed Martin ↔ 국방 예산 민감도',
+    rank: 'C',
+    relationType: '예산/정책 변화 관찰 섹터',
+    summary: '방산주는 국방 예산, 안보 환경, 수주 잔고 변화에 영향을 받는 정책 민감 섹터입니다.',
+    evidence: '공식 예산안, 기업 수주 공시, 실적 자료 확인 전까지 샘플 관찰 항목으로 유지',
+    evidenceUrl: 'https://www.lockheedmartin.com',
+    sourceType: '기업 공시 및 예산 자료 확인 필요',
     verifiedAt: '2026-06-05',
     instrument: {
       name: 'Lockheed Martin Corp',
@@ -69,18 +69,18 @@ const TRUMP_STACK_DATA = [
       price: '$465.10',
       change: '+2.1%',
       volumeSignal: '기관 장기 보유 신호',
-      analysis: '미국 국방 예산 집행률 1위 사업자로, 신정부의 국방 강화 기조에 발맞춰 수주 잔고가 안정적으로 보장되는 안보 관료 포트폴리오의 필수 구성 요소.'
+      analysis: '예산 방향보다 실제 수주, 마진, 납기, 지정학 리스크를 우선 확인해야 합니다.'
     }
   },
   {
     id: 'tsla_doge',
-    subject: 'Tesla ↔ 정부효율성위원회(DOGE) 자율주행 수혜',
+    subject: 'Tesla ↔ 규제/정책 이벤트 민감도',
     rank: 'C',
-    relationType: '간접 인물 연동 및 규제 혁신',
-    summary: '일론 머스크의 신정부 효율성위원회(DOGE) 공동 의장 임명에 따라 미국 전역 자율주행(FSD) 연방 규제 표준화 및 우주 산업 우대 조치 수혜 기대.',
-    evidence: '백악관 공식 보도자료 및 DOGE 위원회 설치 공시 서명',
-    evidenceUrl: 'https://open-cabinet.org',
-    sourceType: '백악관(White House) 브리핑룸 공식 공시',
+    relationType: '규제 변화 관찰 섹터',
+    summary: '자율주행, 전기차 보조금, 에너지 저장 정책 변화에 따라 변동성이 확대될 수 있는 관찰 자산입니다.',
+    evidence: '공식 규제 문서와 기업 공시 확인 전까지 직접 관계로 해석하지 않음',
+    evidenceUrl: 'https://ir.tesla.com',
+    sourceType: '기업 공시 및 규제 자료 확인 필요',
     verifiedAt: '2026-06-05',
     instrument: {
       name: 'Tesla Inc',
@@ -91,7 +91,7 @@ const TRUMP_STACK_DATA = [
       price: '$220.80',
       change: '+3.8%',
       volumeSignal: '거래대금 최상위 수급',
-      analysis: '머스크의 정계 영향력이 테슬라 FSD의 법적 승인 가속화로 직결될 수 있는 구조적 밸류체인이나, 정치적 변동성에 따른 노이즈 가능성 상존.'
+      analysis: '정책 이벤트보다 인도량, 마진, 에너지 사업 성장, FSD 규제 승인 자료를 분리해 검토해야 합니다.'
     }
   }
 ];
@@ -111,9 +111,9 @@ export default function TrumpStackTab({ favorites, onToggleFavorite }) {
 
   const getRankLabel = (rank) => {
     switch (rank) {
-      case 'A': return 'A급: 직접 지분 소유 및 설립자 관계';
-      case 'B': return 'B급: 직간접 정책 수혜 및 관료 매매 검증';
-      case 'C': return 'C급: 인물 네트워크 및 규제 우대 기대';
+      case 'A': return 'A급: 공식 문서 검증 완료';
+      case 'B': return 'B급: 공식 자료 기반 관계 확인';
+      case 'C': return 'C급: 정책 민감 관찰군';
       default: return '';
     }
   };
@@ -124,16 +124,16 @@ export default function TrumpStackTab({ favorites, onToggleFavorite }) {
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Flag size={20} className="text-accent" style={{ color: 'var(--accent-light)', filter: 'drop-shadow(0 0 6px var(--accent))' }} />
-            <span>Trump & Cabinet 관료 정책 추적 리포트</span>
+            <span>정책 민감 섹터 리스크 샘플</span>
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            신정부 행정부 관료(OGE) 및 국회의원들의 주식 거래 데이터(TrumpTrades, Open Cabinet)와 직접 수혜 정책을 교차 분석한 특별 포트폴리오
+            정치 이벤트와 정책 변화에 민감한 자산을 직접 관계로 단정하지 않고, 공식 자료 확인 전까지 샘플 관찰군으로 분류합니다.
           </p>
         </div>
 
         {/* 등급별 필터 단추 */}
         <div className="canvas-selector">
-          {['ALL', 'A', 'B', 'C'].map((filter) => (
+          {['ALL', 'C'].map((filter) => (
             <button
               key={filter}
               className={`canvas-sel-btn ${activeFilter === filter ? 'active' : ''}`}
@@ -252,7 +252,7 @@ export default function TrumpStackTab({ favorites, onToggleFavorite }) {
 
       <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)', padding: '10px' }}>
         <HelpCircle size={14} />
-        <span>본 정보는 사외 공직자 윤리 보고서 및 오픈소스 연동 데이터베이스(Open Cabinet, TrumpTrades 등)의 지연 공시 데이터를 기반으로 가공되었습니다. 본 리포트는 단순 교육용 리서치 참고 자료로 제공되며, 실제 매매에 따른 최종 판단과 책임은 투자자 본인에게 있습니다.</span>
+        <span>본 정보는 정책 민감 섹터를 설명하기 위한 샘플 리서치 자료입니다. 공식 공시와 원문 자료 검증 전까지 직접 관계 또는 매매 근거로 사용하지 않습니다.</span>
       </div>
     </div>
   );
