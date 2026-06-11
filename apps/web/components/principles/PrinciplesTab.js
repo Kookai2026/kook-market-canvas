@@ -98,7 +98,7 @@ export default function PrinciplesTab() {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        <div style={{
+        <div className="preset-summary-grid" style={{
           position: 'absolute',
           top: '-20%',
           right: '-10%',
@@ -224,7 +224,7 @@ export default function PrinciplesTab() {
         <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span>📘 5대 핵심 섹터 구조 가이드</span>
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+        <div className="sector-guide-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
           {SECTORS_INFO.map((sec, idx) => {
             const IconComponent = sec.icon;
             return (

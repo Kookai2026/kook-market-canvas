@@ -41,8 +41,83 @@ export default function DailyCheckTab() {
     }
   };
 
+  const todayCards = [
+    {
+      label: '금지',
+      title: 'AI 전력 인프라 추격 매수 금지',
+      body: '과열도 82 샘플 구간입니다. 신규 비중 확대보다 기존 보유 점검이 우선입니다.',
+      tone: 'danger',
+      icon: AlertTriangle
+    },
+    {
+      label: '대기',
+      title: 'HBM/HPC는 눌림 확인',
+      body: '비중 부족 신호는 있으나, 가격보다 과열도와 수급 안정 확인 후 판단합니다.',
+      tone: 'watch',
+      icon: Activity
+    },
+    {
+      label: '검증',
+      title: 'Musk 관계는 공식 근거만 반영',
+      body: 'X/뉴스 언급은 조사 트리거입니다. A등급은 계약, 공시, IR 확인 후 부여합니다.',
+      tone: 'verify',
+      icon: ShieldCheck
+    }
+  ];
+
+  const watchChanges = [
+    { name: 'HD현대일렉트릭', meta: '관심 종목', status: '과열 확인' },
+    { name: 'NVDA', meta: '관심 종목', status: 'HBM 연동' },
+    { name: 'xAI 전력망', meta: '관계 카드', status: '직접 수주 검증 보류' }
+  ];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', paddingBottom: '40px' }}>
+      <section className="today-brief">
+        <div className="today-brief-head">
+          <div>
+            <span className="today-kicker">KMC Today</span>
+            <h1>오늘은 사는 날보다 확인하는 날입니다.</h1>
+            <p>샘플 데이터 기준입니다. 실제 운영 전까지 모든 판단은 검증 카드와 원칙 점검용으로만 사용합니다.</p>
+          </div>
+          <div className="today-asof">
+            <span>as_of</span>
+            <strong>2026-06-11</strong>
+            <em>sample</em>
+          </div>
+        </div>
+
+        <div className="today-card-grid">
+          {todayCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <article key={card.label} className={`today-verdict-card ${card.tone}`}>
+                <div className="today-card-label">
+                  <Icon size={16} />
+                  <span>{card.label}</span>
+                </div>
+                <h2>{card.title}</h2>
+                <p>{card.body}</p>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="today-watch-strip">
+          <div>
+            <strong>우리 관심 변화</strong>
+            <span>즐겨찾기와 관계 카드에서 먼저 볼 항목</span>
+          </div>
+          <div className="today-watch-list">
+            {watchChanges.map(item => (
+              <span key={item.name}>
+                <b>{item.name}</b>
+                <em>{item.meta} · {item.status}</em>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
       
       {/* 데모/샘플 배지 안내 */}
       <div style={{
@@ -135,7 +210,7 @@ export default function DailyCheckTab() {
             const badge = getStatusBadge(item.key);
             const dev = parseFloat(getDeviation(item.key));
             return (
-              <div key={idx} style={{ 
+              <div key={idx} className="allocation-row" style={{ 
                 display: 'grid', 
                 gridTemplateColumns: '2.5fr 1fr 1fr 1fr 1fr', 
                 alignItems: 'center', 

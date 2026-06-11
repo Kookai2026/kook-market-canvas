@@ -245,6 +245,7 @@ const CANVASES_DATA = {
 export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
   const [selectedSector, setSelectedSector] = useState('ai_power_grid');
   const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [relationFilter, setRelationFilter] = useState('all');
   
   // 줌 및 드래그 상태 관리
   const [zoom, setZoom] = useState(1);
@@ -255,15 +256,44 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
 
   const activeCanvas = CANVASES_DATA[selectedSector] || CANVASES_DATA.ai_power_grid;
   const nodesList = Object.values(activeCanvas.nodes);
-  const selectedNode = activeCanvas.nodes[selectedNodeId] || nodesList[0];
+  const isMuskNode = (node) => {
+    const haystack = [
+      node.name,
+      node.description,
+      node.evidence?.type,
+      ...(node.instruments || []).flatMap(inst => [inst.name, inst.ticker])
+    ].filter(Boolean).join(' ').toLowerCase();
+    return /musk|tesla|tsla|xai|spacex|cybertruck|megapack|memphis|멤피스|테슬라|머스크/.test(haystack);
+  };
+  const isPolicyRiskNode = (node) => {
+    const haystack = [
+      node.name,
+      node.description,
+      node.evidence?.type,
+      ...(node.instruments || []).flatMap(inst => [inst.name, inst.ticker, inst.sector])
+    ].filter(Boolean).join(' ').toLowerCase();
+    return /policy|regulation|regulatory|tariff|tax|defense|energy|oil|gas|nuclear|ppa|utility|djt|xom|lmt|tsla|tesla|정책|규제|관세|세제|국방|방산|에너지|원전|유틸리티|테슬라/.test(haystack);
+  };
+  const visibleNodes = relationFilter === 'musk'
+    ? nodesList.filter(isMuskNode)
+    : relationFilter === 'policy'
+      ? nodesList.filter(isPolicyRiskNode)
+      : nodesList;
+  const visibleNodeIds = new Set(visibleNodes.map(node => node.id));
+  const visibleEdges = activeCanvas.edges.filter(edge =>
+    relationFilter === 'all'
+      ? true
+      : visibleNodeIds.has(edge.from) && visibleNodeIds.has(edge.to)
+  );
+  const selectedNode = visibleNodes.find(node => node.id === selectedNodeId) || visibleNodes[0] || null;
 
   // 선택된 노드에 연결된 엣지(증빙 포함) 필터링
   const connectedEdges = activeCanvas.edges.filter(
-    edge => edge.from === selectedNode.id || edge.to === selectedNode.id
+    edge => selectedNode && (edge.from === selectedNode.id || edge.to === selectedNode.id)
   );
 
   const handleMouseDown = (e) => {
-    if (e.target.closest('.canvas-node-item') || e.target.closest('.zoom-controls') || e.target.closest('.canvas-selector')) return;
+    if (e.target.closest('.canvas-node-item') || e.target.closest('.zoom-controls') || e.target.closest('.canvas-selector') || e.target.closest('.canvas-layer-filter')) return;
     setIsDragging(true);
     dragStart.current = { x: e.clientX - pan.x, y: e.clientY - pan.y };
   };
@@ -292,6 +322,11 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
     setSelectedNodeId(null);
     setZoom(1);
     setPan({ x: 0, y: 0 });
+  };
+
+  const handleRelationFilter = (nextFilter) => {
+    setRelationFilter(nextFilter);
+    setSelectedNodeId(null);
   };
 
   return (
@@ -333,6 +368,36 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
         <button className={`canvas-sel-btn ${selectedSector === 'bess_ess' ? 'active' : ''}`} onClick={() => handleSelectSector('bess_ess')}>🔋 4. BESS / ESS</button>
       </div>
 
+      <div className="canvas-layer-filter">
+        <div>
+          <strong>관계 검증 레이어</strong>
+          <span>X/뉴스 언급과 정책 이벤트는 후보 신호로만 보고, 공식 근거가 있는 관계만 캔버스에서 추적합니다.</span>
+        </div>
+        <div className="canvas-filter-toggle" role="group" aria-label="캔버스 관계 필터">
+          <button
+            type="button"
+            className={relationFilter === 'all' ? 'active' : ''}
+            onClick={() => handleRelationFilter('all')}
+          >
+            전체
+          </button>
+          <button
+            type="button"
+            className={relationFilter === 'musk' ? 'active' : ''}
+            onClick={() => handleRelationFilter('musk')}
+          >
+            Musk Stack
+          </button>
+          <button
+            type="button"
+            className={relationFilter === 'policy' ? 'active' : ''}
+            onClick={() => handleRelationFilter('policy')}
+          >
+            정책 리스크
+          </button>
+        </div>
+      </div>
+
       {/* 줌 & 팬 뷰포트 영역 */}
       <div 
         className="canvas-map-wrapper"
@@ -369,7 +434,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
                 <path d="M 0 2 L 10 5 L 0 8 z" fill="rgba(139, 92, 246, 0.35)" />
               </marker>
             </defs>
-            {activeCanvas.edges.map((edge, index) => {
+            {visibleEdges.map((edge, index) => {
               const fromNode = activeCanvas.nodes[edge.from];
               const toNode = activeCanvas.nodes[edge.to];
               if (!fromNode || !toNode) return null;
@@ -395,8 +460,8 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
           </svg>
 
           {/* 노드 렌더러 */}
-          {nodesList.map((node) => {
-            const isSelected = selectedNodeId === node.id || (!selectedNodeId && nodesList[0].id === node.id);
+          {visibleNodes.map((node) => {
+            const isSelected = selectedNode?.id === node.id;
             return (
               <div
                 key={node.id}
@@ -432,6 +497,12 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
               </div>
             );
           })}
+          {!visibleNodes.length && (
+            <div className="canvas-empty-filter">
+              <strong>이 섹터에는 선택한 관계 레이어 노드가 없습니다.</strong>
+              <span>전체 보기로 전환하거나, 공식 근거가 확보된 관계를 캔버스 데이터에 추가해야 합니다.</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -455,7 +526,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
             {selectedNode.description}
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px' }}>
+          <div className="node-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px' }}>
             
             {/* 좌측: 관련 종목 판단 */}
             <div>
@@ -466,7 +537,7 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
                 {selectedNode.instruments.map((inst, idx) => {
                   const isFav = favorites.includes(inst.ticker);
                   return (
-                    <div key={idx} style={{ 
+                    <div key={idx} className="node-stock-row" style={{ 
                       background: 'rgba(255,255,255,0.01)', 
                       border: '1px solid var(--border)', 
                       padding: '12px 16px', 

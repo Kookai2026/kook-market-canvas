@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { 
-  FileText, Star, User, Network, Layers, ShieldCheck, BookOpen, CheckSquare, Flag
+  Star, User, Network, Layers, BookOpen, CheckSquare
 } from 'lucide-react';
 
 import PrinciplesTab from '../components/principles/PrinciplesTab';
@@ -13,12 +13,6 @@ const DailyCheckTab = dynamic(() => import('../components/check/DailyCheckTab'),
 });
 const ValueChainCanvas = dynamic(() => import('../components/canvas/ValueChainCanvas'), {
   loading: () => <LoadingPanel label="밸류체인 캔버스 로드 중..." />
-});
-const MuskStackTab = dynamic(() => import('../components/cards/MuskStackTab'), {
-  loading: () => <LoadingPanel label="Musk Stack 검증 로드 중..." />
-});
-const TrumpStackTab = dynamic(() => import('../components/cards/TrumpStackTab'), {
-  loading: () => <LoadingPanel label="정책 리스크 샘플 로드 중..." />
 });
 const SignalFeed = dynamic(() => import('../components/news/SignalFeed'), {
   loading: () => <LoadingPanel label="시그널 피드 로드 중..." />
@@ -38,8 +32,34 @@ function LoadingPanel({ label }) {
   );
 }
 
+function BottomNav({ activeTab, onChange }) {
+  const items = [
+    { id: 'daily-check', label: '오늘', icon: CheckSquare },
+    { id: 'favorites', label: '관심', icon: Star },
+    { id: 'canvas', label: '캔버스', icon: Layers },
+    { id: 'principles', label: '원칙', icon: BookOpen },
+  ];
+
+  return (
+    <nav className="bottom-nav" aria-label="KMC 모바일 주요 메뉴">
+      {items.map(({ id, label, icon: Icon }) => (
+        <button
+          key={id}
+          type="button"
+          className={`bottom-nav-item ${activeTab === id ? 'active' : ''}`}
+          onClick={() => onChange(id)}
+          aria-current={activeTab === id ? 'page' : undefined}
+        >
+          <Icon size={20} />
+          <span>{label}</span>
+        </button>
+      ))}
+    </nav>
+  );
+}
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('principles'); // 기본 첫 랜딩화면을 '5년 투자 원칙'으로 설정
+  const [activeTab, setActiveTab] = useState('daily-check'); // 모바일 첫 화면은 오늘의 판단으로 시작
   const [favorites, setFavorites] = useState(['267260', 'NVDA']); // 기본 즐겨찾기 종목
   const [copied, setCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -123,53 +143,32 @@ export default function Home() {
       {/* 탭 네비게이션 바 */}
       <nav className="tab-nav">
         <button 
-          className={`tab-btn ${activeTab === 'principles' ? 'active' : ''}`}
-          onClick={() => setActiveTab('principles')}
-        >
-          <BookOpen size={16} />
-          <span>5년 투자 원칙</span>
-        </button>
-        <button 
           className={`tab-btn ${activeTab === 'daily-check' ? 'active' : ''}`}
           onClick={() => setActiveTab('daily-check')}
         >
           <CheckSquare size={16} />
-          <span>오늘의 점검</span>
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'canvas' ? 'active' : ''}`}
-          onClick={() => setActiveTab('canvas')}
-        >
-          <Layers size={16} />
-          <span>밸류체인 캔버스</span>
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'musk' ? 'active' : ''}`}
-          onClick={() => setActiveTab('musk')}
-        >
-          <ShieldCheck size={16} />
-          <span>Musk Stack 검증</span>
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'trump' ? 'active' : ''}`}
-          onClick={() => setActiveTab('trump')}
-        >
-          <Flag size={16} />
-          <span>정책 리스크 샘플</span>
+          <span>오늘</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
           onClick={() => setActiveTab('favorites')}
         >
           <Star size={16} />
-          <span>관심 종목</span>
+          <span>관심</span>
         </button>
         <button 
-          className={`tab-btn ${activeTab === 'rebalance-log' ? 'active' : ''}`}
-          onClick={() => setActiveTab('rebalance-log')}
+          className={`tab-btn ${activeTab === 'canvas' ? 'active' : ''}`}
+          onClick={() => setActiveTab('canvas')}
         >
-          <FileText size={16} />
-          <span>리밸런싱 로그</span>
+          <Layers size={16} />
+          <span>캔버스</span>
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'principles' ? 'active' : ''}`}
+          onClick={() => setActiveTab('principles')}
+        >
+          <BookOpen size={16} />
+          <span>원칙</span>
         </button>
       </nav>
 
@@ -183,24 +182,12 @@ export default function Home() {
       )}
 
       {activeTab === 'canvas' && (
-        <ValueChainCanvas 
-          favorites={favorites} 
-          onToggleFavorite={toggleFavorite} 
-        />
-      )}
-
-      {activeTab === 'musk' && (
-        <MuskStackTab 
-          favorites={favorites} 
-          onToggleFavorite={toggleFavorite} 
-        />
-      )}
-
-      {activeTab === 'trump' && (
-        <TrumpStackTab 
-          favorites={favorites} 
-          onToggleFavorite={toggleFavorite} 
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <ValueChainCanvas 
+            favorites={favorites} 
+            onToggleFavorite={toggleFavorite} 
+          />
+        </div>
       )}
 
       {activeTab === 'favorites' && (
@@ -218,13 +205,11 @@ export default function Home() {
                 onToggleFavorite={toggleFavorite} 
               />
             </section>
+            <RebalanceLogTab />
           </div>
         </div>
       )}
-
-      {activeTab === 'rebalance-log' && (
-        <RebalanceLogTab />
-      )}
+      <BottomNav activeTab={activeTab} onChange={setActiveTab} />
     </main>
   );
 }

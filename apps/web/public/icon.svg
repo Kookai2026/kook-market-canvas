@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="KMC">
+  <rect width="512" height="512" rx="96" fill="#0a0b0d"/>
+  <path d="M96 348V164h54v74l72-74h68l-84 84 90 100h-70l-76-84v84H96Z" fill="#f3f4f6"/>
+  <path d="M316 348V164h49l51 76 51-76h49v184h-52V248l-36 54h-24l-36-54v100h-52Z" fill="#a78bfa"/>
+  <path d="M96 398h320" stroke="#10b981" stroke-width="18" stroke-linecap="round"/>
+</svg>

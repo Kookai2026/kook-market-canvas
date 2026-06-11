@@ -2,7 +2,19 @@ import '../styles/globals.css';
 
 export const metadata = {
   title: 'KMC - KOOK Market Canvas',
-  description: '산업 밸류체인과 시장 데이터를 연결하는 투자 리서치 작업대',
+  description: '모바일 우선 일일 투자 시그널 점검 앱',
+  applicationName: 'KMC Stock',
+  appleWebApp: {
+    capable: true,
+    title: 'KMC Stock',
+    statusBarStyle: 'black-translucent',
+  },
+  manifest: '/manifest.webmanifest',
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
