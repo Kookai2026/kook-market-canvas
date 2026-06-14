@@ -10,7 +10,7 @@ import { getChartLinks, getMarketSnapshotMeta, getSnapshotQuote } from '../../da
 export default function DailyCheckTab() {
   const marketSnapshot = getMarketSnapshotMeta();
   const snapshotDate = marketSnapshot.asOf ? marketSnapshot.asOf.replace('T', ' ').slice(0, 16) : '미갱신';
-  const snapshotPicks = ['TSLA', 'NVDA', '267260'].map((ticker) => ({
+  const snapshotPicks = ['TSLA', 'NVDA', 'ETN'].map((ticker) => ({
     ticker,
     quote: getSnapshotQuote(ticker),
     chart: getChartLinks(ticker)[0]
@@ -99,8 +99,8 @@ export default function DailyCheckTab() {
         <div className={`today-market-sync ${marketSnapshot.stale ? 'stale' : 'fresh'}`}>
           <div className="today-market-sync-head">
             <div>
-              <strong>무료 지연 가격 스냅샷 적용됨</strong>
-              <span>{marketSnapshot.source} · {marketSnapshot.itemCount}개 종목 · 실시간 체결가는 외부 차트에서 확인</span>
+              <strong>미국 주요 종목 무료 지연 스냅샷 적용</strong>
+              <span>한국 종목은 무료 데이터 검증 전 샘플 유지 · 실시간 체결가는 외부 차트에서 확인</span>
             </div>
             <span>{marketSnapshot.stale ? '오래됨' : '배포 반영'}</span>
           </div>

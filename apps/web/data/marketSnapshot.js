@@ -1,6 +1,21 @@
 import MARKET_SNAPSHOT from '../public/market-snapshot.json';
 
 const STALE_HOURS = 36;
+const DELAYED_PRICE_ALLOWLIST = new Set([
+  'TSLA',
+  'NVDA',
+  'ETN',
+  'VRT',
+  'MOD',
+  'CEG',
+  'VST',
+  'SMR',
+  'IONQ',
+  'RGTI',
+  'QBTS',
+  'IBM',
+  'MBLY'
+]);
 
 function isSnapshotStale(asOf) {
   if (!asOf) return true;
@@ -45,12 +60,17 @@ export function getChartLinks(ticker) {
 export function enrichInstrumentWithSnapshot(instrument) {
   const snapshot = MARKET_SNAPSHOT.items[instrument.ticker];
   const stale = Boolean(snapshot?.stale) || isSnapshotStale(MARKET_SNAPSHOT.as_of);
+  const canUseDelayedPrice = DELAYED_PRICE_ALLOWLIST.has(instrument.ticker);
 
-  if (!snapshot) {
+  if (!snapshot || !canUseDelayedPrice) {
     return {
       ...instrument,
       priceStatus: instrument.ticker === 'SPACE.X' ? 'private' : 'sample',
-      priceSource: instrument.ticker === 'SPACE.X' ? '비상장/직접 시세 없음' : '샘플 리서치 데이터',
+      priceSource: instrument.ticker === 'SPACE.X'
+        ? '비상장/직접 시세 없음'
+        : /^[0-9]{6}$/.test(instrument.ticker)
+          ? '한국 종목은 무료 데이터 검증 전 샘플 표시'
+          : '샘플 리서치 데이터',
       priceAsOf: instrument.asOf || null,
       priceLinks: getChartLinks(instrument.ticker)
     };
