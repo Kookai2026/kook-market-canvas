@@ -3,10 +3,19 @@
 import { useState } from 'react';
 import { 
   AlertTriangle, CheckCircle, Info, 
-  TrendingUp, ArrowRight, ShieldCheck, Activity
+  TrendingUp, ArrowRight, ShieldCheck, Activity, ExternalLink
 } from 'lucide-react';
+import { getChartLinks, getMarketSnapshotMeta, getSnapshotQuote } from '../../data/marketSnapshot';
 
 export default function DailyCheckTab() {
+  const marketSnapshot = getMarketSnapshotMeta();
+  const snapshotDate = marketSnapshot.asOf ? marketSnapshot.asOf.replace('T', ' ').slice(0, 16) : '미갱신';
+  const snapshotPicks = ['TSLA', 'NVDA', '267260'].map((ticker) => ({
+    ticker,
+    quote: getSnapshotQuote(ticker),
+    chart: getChartLinks(ticker)[0]
+  }));
+
   // 데모용 샘플 비중 데이터
   const [currentWeights] = useState({
     musk: 18.5,
@@ -81,9 +90,34 @@ export default function DailyCheckTab() {
             <p>샘플 데이터 기준입니다. 실제 운영 전까지 모든 판단은 검증 카드와 원칙 점검용으로만 사용합니다.</p>
           </div>
           <div className="today-asof">
-            <span>as_of</span>
-            <strong>2026-06-11</strong>
-            <em>sample</em>
+            <span>price snapshot</span>
+            <strong>{snapshotDate}</strong>
+            <em>{marketSnapshot.stale ? '오래됨' : '무료 지연'}</em>
+          </div>
+        </div>
+
+        <div className={`today-market-sync ${marketSnapshot.stale ? 'stale' : 'fresh'}`}>
+          <div className="today-market-sync-head">
+            <div>
+              <strong>무료 지연 가격 스냅샷 적용됨</strong>
+              <span>{marketSnapshot.source} · {marketSnapshot.itemCount}개 종목 · 실시간 체결가는 외부 차트에서 확인</span>
+            </div>
+            <span>{marketSnapshot.stale ? '오래됨' : '배포 반영'}</span>
+          </div>
+          <div className="today-market-quotes">
+            {snapshotPicks.map(item => (
+              <a
+                key={item.ticker}
+                href={item.chart?.url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <b>{item.ticker}</b>
+                <strong>{item.quote?.price || 'N/A'}</strong>
+                <em>{item.quote?.change || 'N/A'}</em>
+                <ExternalLink size={12} />
+              </a>
+            ))}
           </div>
         </div>
 

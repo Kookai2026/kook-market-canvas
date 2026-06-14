@@ -14,8 +14,14 @@ export function getMarketSnapshotMeta() {
     asOf: MARKET_SNAPSHOT.as_of,
     source: MARKET_SNAPSHOT.source,
     mode: MARKET_SNAPSHOT.mode,
-    refreshPolicy: MARKET_SNAPSHOT.refresh_policy
+    refreshPolicy: MARKET_SNAPSHOT.refresh_policy,
+    stale: isSnapshotStale(MARKET_SNAPSHOT.as_of),
+    itemCount: Object.keys(MARKET_SNAPSHOT.items || {}).length
   };
+}
+
+export function getSnapshotQuote(ticker) {
+  return MARKET_SNAPSHOT.items?.[ticker] || null;
 }
 
 export function getChartLinks(ticker) {
