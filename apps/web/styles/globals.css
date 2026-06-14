@@ -624,6 +624,72 @@ h1, h2, h3, h4 {
 .inst-change.up { color: #f87171; }
 .inst-change.down { color: #60a5fa; }
 
+.price-status-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.price-status-strip.delayed {
+  border-color: rgba(34, 197, 94, 0.18);
+  background: rgba(34, 197, 94, 0.06);
+  color: #a7f3d0;
+}
+
+.price-status-strip.stale {
+  border-color: rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.06);
+  color: #fde68a;
+}
+
+.price-status-strip.private {
+  border-color: rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.06);
+  color: #fde68a;
+}
+
+.mini-price-status,
+.mini-chart-link {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mini-price-status.delayed {
+  color: #a7f3d0;
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.18);
+}
+
+.mini-price-status.stale {
+  color: #fde68a;
+  background: rgba(251, 191, 36, 0.07);
+  border-color: rgba(251, 191, 36, 0.18);
+}
+
+.mini-price-status.sample,
+.mini-price-status.private {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.mini-chart-link {
+  color: var(--accent-light);
+  text-decoration: none;
+  background: rgba(139, 92, 246, 0.07);
+  border-color: rgba(139, 92, 246, 0.18);
+}
+
 .metrics-grid {
   display: flex;
   flex-direction: column;

@@ -5,9 +5,14 @@ import {
   Star, Activity, ArrowUpRight, AlertTriangle, 
   LineChart, ExternalLink, HelpCircle, Calendar
 } from 'lucide-react';
+import { enrichInstrumentWithSnapshot } from '../../data/marketSnapshot';
 
 export default function InstrumentCard({ instrument, isFavorite, onToggleFavorite }) {
-  const { name, ticker, sector, fit, overheat, analysis, price, change, volumeSignal, asOf } = instrument;
+  const enrichedInstrument = enrichInstrumentWithSnapshot(instrument);
+  const {
+    name, ticker, sector, fit, overheat, analysis, price, change, volumeSignal,
+    asOf, priceAsOf, priceSource, priceStatus, priceLinks
+  } = enrichedInstrument;
   const [showChart, setShowChart] = useState(false);
   const [showFitInfo, setShowFitInfo] = useState(false);
 
@@ -22,22 +27,6 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
     
     // 미국 주식들
     return `NASDAQ:${tick}`;
-  };
-
-  // 외부 링크 생성
-  const getExternalLinks = (tick) => {
-    const isKorean = tick.match(/^[0-9]{6}$/);
-    if (isKorean) {
-      return [
-        { label: '네이버 종토방', url: `https://m.stock.naver.com/domestic/stock/${tick}/discuss` },
-        { label: '네이버 공시', url: `https://m.stock.naver.com/domestic/stock/${tick}/disclosure` }
-      ];
-    } else {
-      return [
-        { label: '야후 파이낸스', url: `https://finance.yahoo.com/quote/${tick}` },
-        { label: 'Stocktwits 토론', url: `https://stocktwits.com/symbol/${tick}` }
-      ];
-    }
   };
 
   // 샘플 기술적 시그널 매칭. 실제 운영에서는 수집 파이프라인 결과로 교체한다.
@@ -84,9 +73,15 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
   };
 
   const tvSymbol = getTradingViewSymbol(ticker);
-  const links = getExternalLinks(ticker);
   const techSignals = getTechnicalSignals(ticker);
-  const dateStr = asOf ? asOf.substring(0, 10) : '2026-06-04';
+  const dateStr = (priceAsOf || asOf) ? (priceAsOf || asOf).substring(0, 10) : '샘플';
+  const isUp = typeof change === 'string' && change.startsWith('+');
+  const priceStatusLabel = {
+    delayed: '지연',
+    stale: '오래됨',
+    sample: '샘플',
+    private: '비상장'
+  }[priceStatus] || '샘플';
 
   return (
     <div className="instrument-card panel animate-fade-in">
@@ -122,15 +117,20 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
       <div className="price-row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
           <span className="inst-price">{price}</span>
-          <span className={`inst-change ${change.startsWith('+') ? 'up' : 'down'}`}>
-            <ArrowUpRight size={14} style={{ display: 'inline', transform: change.startsWith('+') ? 'none' : 'rotate(90deg)' }} />
+          <span className={`inst-change ${isUp ? 'up' : 'down'}`}>
+            <ArrowUpRight size={14} style={{ display: 'inline', transform: isUp ? 'none' : 'rotate(90deg)' }} />
             {change}
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text-muted)' }}>
           <Calendar size={11} />
-          <span>업데이트: {dateStr}</span>
+          <span>{priceStatusLabel}: {dateStr}</span>
         </div>
+      </div>
+
+      <div className={`price-status-strip ${priceStatus}`}>
+        <span>{priceSource}</span>
+        <span>{priceStatus === 'delayed' ? '정밀 실시간 확인은 외부 차트 사용' : '매매 전 외부 차트 확인'}</span>
       </div>
 
       {/* 투자 적합도 & 시장 과열도 */}
@@ -226,7 +226,7 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
         </div>
         <div className="footer-item" style={{ color: 'var(--warning)' }}>
           <AlertTriangle size={12} />
-          <span>가격/점수는 샘플 리서치 데이터입니다.</span>
+          <span>앱 내부 가격은 실시간 체결가가 아닙니다.</span>
         </div>
         <div className="inst-analysis">
           {overheat >= 80 && <AlertTriangle size={12} style={{ color: 'var(--danger)', verticalAlign: 'middle', marginRight: '4px', display: 'inline' }} />}
@@ -234,8 +234,8 @@ export default function InstrumentCard({ instrument, isFavorite, onToggleFavorit
         </div>
 
         {/* 외부 종토방/토론방 퀵 링크 (피드백 4 반영) */}
-        <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-          {links.map((lnk, idx) => (
+        <div style={{ display: 'flex', gap: '8px', marginTop: '4px', flexWrap: 'wrap' }}>
+          {priceLinks.map((lnk, idx) => (
             <a 
               key={idx}
               href={lnk.url}

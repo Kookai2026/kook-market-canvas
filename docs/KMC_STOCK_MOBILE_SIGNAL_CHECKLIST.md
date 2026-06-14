@@ -15,6 +15,7 @@ Key issues:
 - `오늘의 점검` contains useful rules but reads like a long report.
 - `SignalFeed` is still a static sample feed, not an embedding-based signal surface.
 - Some investment statements need stricter source, `as_of`, and verification status.
+- Prices are not live; current app needs a delayed/free snapshot layer and clear external real-time links.
 
 ## 1. Existing Design References
 
@@ -204,6 +205,37 @@ Verification:
 - [x] No layout overflow in the main daily flow.
 - [x] Dev server HTTP checks passed for `/`, `/manifest.webmanifest`, and `/icon.svg`.
 
+### Step 7. Free Delayed Price Snapshot
+
+Target:
+
+```text
+Free/delayed source
+-> small scheduled syncer
+-> market snapshot read model
+-> KMC cards render snapshot + as_of + status
+-> real-time charts stay external links
+```
+
+Tasks:
+
+- [x] Add `public/market-snapshot.json` and a `marketSnapshot` read-model helper for delayed/sample status.
+- [x] Overlay card prices through the snapshot helper instead of treating hardcoded values as live.
+- [x] Add price status wording: delayed/sample/private.
+- [x] Add external real-time chart links on instrument cards and canvas node detail rows.
+- [x] Replace static snapshot items with a free scheduled syncer output path.
+- [x] Prepare GitHub Actions schedule for free delayed snapshot updates. Deployment note: pushing a new workflow requires a GitHub token with `workflow` scope.
+- [x] Add `npm run sync:market` for manual refresh from `apps/web`.
+- [x] Add stale state when snapshot age exceeds 36 hours.
+
+Verification:
+
+- [x] UI no longer claims internal prices are real-time.
+- [x] Missing/private symbols degrade to sample/private status.
+- [x] External chart path exists for Korean and US tickers.
+- [x] `npm run sync:market` writes a valid snapshot.
+- [x] `npm run build` passes after implementation.
+
 ## 5. Open Decisions
 
 - [x] Should the app use top segmented tabs or bottom mobile navigation? Decision: mobile uses fixed bottom navigation; desktop keeps compact top tabs.
@@ -212,6 +244,7 @@ Verification:
 - [x] Should X validation states be represented in `SignalFeed` samples? Decision: use `raw_social`, `candidate`, `needs_source`, `corroborated`, `rejected`.
 - [ ] Should X be included in P0, or only after OpenDART/news/company sources are stable?
 - [ ] Should the app show exact portfolio percentages, or only risk bands until account integration is real?
+- [x] Should KMC host true live charts internally? Decision: no. Use free delayed snapshots internally and route real-time/interactive chart needs to external finance pages.
 
 ## 6. Work Log
 

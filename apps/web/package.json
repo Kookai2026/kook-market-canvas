@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "sync:market": "node ../../services/market_snapshot/sync_market_snapshot.mjs",
     "start": "next start"
   },
   "dependencies": {

@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Network, HelpCircle, Layers, ZoomIn, ZoomOut, RotateCcw, Award, Calendar, Link2, ExternalLink } from 'lucide-react';
 import InstrumentCard from '../cards/InstrumentCard';
+import { enrichInstrumentWithSnapshot } from '../../data/marketSnapshot';
 
 // 4대 Core 섹터 고밀도 팩트 기반 데이터
 const CANVASES_DATA = {
@@ -535,7 +536,9 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {selectedNode.instruments.map((inst, idx) => {
+                  const displayInst = enrichInstrumentWithSnapshot(inst);
                   const isFav = favorites.includes(inst.ticker);
+                  const isUp = typeof displayInst.change === 'string' && displayInst.change.startsWith('+');
                   return (
                     <div key={idx} className="node-stock-row" style={{ 
                       background: 'rgba(255,255,255,0.01)', 
@@ -551,8 +554,21 @@ export default function ValueChainCanvas({ favorites, onToggleFavorite }) {
                         {inst.ticker !== '공급망' && <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '6px' }}>({inst.ticker})</span>}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-light)' }}>{inst.price}</span>
-                        <span style={{ fontSize: '11px', fontWeight: '600', color: inst.change.startsWith('+') ? 'var(--danger)' : 'var(--text-muted)' }}>{inst.change}</span>
+                        <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-light)' }}>{displayInst.price}</span>
+                        <span style={{ fontSize: '11px', fontWeight: '600', color: isUp ? 'var(--danger)' : 'var(--text-muted)' }}>{displayInst.change}</span>
+                        <span className={`mini-price-status ${displayInst.priceStatus}`}>
+                          {displayInst.priceStatus === 'delayed' ? '지연' : displayInst.priceStatus === 'stale' ? '오래됨' : displayInst.priceStatus === 'private' ? '비상장' : '샘플'}
+                        </span>
+                        {displayInst.priceLinks?.[0] && (
+                          <a
+                            href={displayInst.priceLinks[0].url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mini-chart-link"
+                          >
+                            차트
+                          </a>
+                        )}
                         {inst.ticker !== '공급망' && (
                           <button
                             onClick={() => onToggleFavorite(inst.ticker)}
